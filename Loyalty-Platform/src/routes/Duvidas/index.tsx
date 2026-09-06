@@ -1,4 +1,5 @@
-import FaqCard from '../components/FaqCard';
+// src/routes/Duvidas/index.tsx
+import FaqCard from '../../components/FaqCard';
 
 interface FaqItem {
   id: string;
@@ -19,7 +20,7 @@ export default function Duvidas() {
 
       <section aria-label="Perguntas frequentes">
         {faqData.map((item) => (
-            <FaqCard key={item.id} pergunta={item.pergunta} resposta={item.resposta} />
+          <FaqCard key={item.id} pergunta={item.pergunta} resposta={item.resposta} />
         ))}
       </section>
 
