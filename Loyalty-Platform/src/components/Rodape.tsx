@@ -1,7 +1,7 @@
 export default function Rodape() {
   return (
     <footer>
-      <p>© 2026 Loyalty Platform · FIAP · Challenge 1TDSPX</p>
+      <p>© 2026 Loyalty Platform · FIAP · Challenge 1TDSPW</p>
     </footer>
   );
 }
