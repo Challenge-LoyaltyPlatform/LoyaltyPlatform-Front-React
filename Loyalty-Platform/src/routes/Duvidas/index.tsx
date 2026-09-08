@@ -5,29 +5,48 @@ import { Link } from 'react-router';
 interface FaqItem {
   id: string;
   pergunta: string;
-  resposta: string;
+  resposta: React.ReactNode;
 }
 
 const faqData: FaqItem[] = [
   {
     id: '1',
     pergunta: 'O que é a Loyalty Platform?',
-    resposta:
-      'É uma plataforma B2B de gamificação criada para ajudar empresas a reterem seus usuários de forma ativa e contínua. Por meio de missões, rankings, desafios e premiações reais, transformamos o engajamento digital em recompensas concretas.',
+    resposta: (
+      <>
+        É uma plataforma B2B de{' '}
+        <span className="text-pink-500">gamificação</span> criada para ajudar
+        empresas a reterem seus usuários de forma ativa e contínua. Por meio
+        de missões, rankings, desafios e premiações reais, transformamos o
+        engajamento digital em recompensas concretas.
+      </>
+    ),
   },
   {
     id: '2',
     pergunta: 'Como funciona o sistema de pontuação?',
-    resposta:
-      'Cada ação realizada pelo usuário dentro da plataforma é avaliada automaticamente por um algoritmo e recebe uma pontuação de 0 a 100, baseada no impacto e relevância da ação. Quanto mais você interage, maior sua pontuação.',
+    resposta: (
+      <>
+        Cada ação realizada pelo usuário dentro da plataforma é avaliada
+        automaticamente por um algoritmo e recebe uma pontuação de 0 a 100,
+        baseada no impacto e relevância da ação. Quanto mais você{' '}
+        <span className="text-pink-500">interage</span>, maior sua pontuação.
+      </>
+    ),
   },
   {
     id: '3',
     pergunta: 'Quais são as recompensas disponíveis?',
-    resposta:
-      'As recompensas variam de acordo com cada empresa parceira. No caso da SoulUp, incluem descontos na fatura de energia, benefícios exclusivos e experiências sustentáveis. O usuário no topo do ranking tem sua conta de energia totalmente subsidiada.'
+    resposta: (
+      <>
+        As recompensas variam de acordo com cada empresa parceira. No caso da{' '}
+        <span className="text-pink-500">SoulUp</span>, incluem descontos na
+        fatura de energia, benefícios exclusivos e experiências sustentáveis.
+        O usuário no topo do ranking tem sua conta de energia totalmente
+        subsidiada.
+      </>
+    ),
   },
-  
 ];
 
 export default function Duvidas() {

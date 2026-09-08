@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react';
+
 interface FaqCardProps {
   pergunta: string;
-  resposta: string;
+  resposta: ReactNode;
 }
 
 export default function FaqCard({ pergunta, resposta }: FaqCardProps) {
