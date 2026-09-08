@@ -1,5 +1,6 @@
 // src/routes/Duvidas/index.tsx
 import FaqCard from './FaqCard';
+import { Link } from 'react-router';
 
 interface FaqItem {
   id: string;
@@ -52,9 +53,12 @@ export default function Duvidas() {
         <p className="text-gray-300 mb-6">
           Entre em <span className="text-pink-500">contato!</span>
         </p>
-        <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-full transition-colors">
+        <Link
+          to="/contato"
+          className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-full transition-colors"
+        >
           Entre em contato!
-        </button>
+        </Link>
       </section>
     </main>
   );
