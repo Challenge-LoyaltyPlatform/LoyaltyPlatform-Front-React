@@ -2,6 +2,7 @@ import fotoAndrei from '@/img/fotoAndrei.jpg';
 import fotoFelipe from '@/img/fotoFelipe.jpg';
 import fotoHenrique from '@/img/fotoHenrique.jpg';
 import fotoLuiz from '@/img/fotoLuiz.jpg';
+import CardIntegrante from './CardIntegrante';
 
 type Integrante = {
   id: number;
@@ -31,6 +32,18 @@ export default function Integrantes(){
           dedicada a transformar desafios em experiências gamificadas que
           inspiram e conectam pessoas.
         </p>
+      </section>
+      <section className="max-w-6xl mx-auto mt-14 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {integrantes.map((integrante) => (
+          <CardIntegrante
+            key={integrante.id}
+            nome={integrante.nome}
+            rm={integrante.rm}
+            foto={integrante.foto}
+            linkedin={integrante.linkedin}
+            github={integrante.github}
+          />
+        ))}
       </section>
     </main>
   );
