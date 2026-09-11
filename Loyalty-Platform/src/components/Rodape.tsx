@@ -38,7 +38,7 @@ export default function Rodape() {
         <hr className="border-gray-700 my-8" />
 
         <p className="text-gray-500 text-xs text-right">
-          © 2026 Loyalty Platform · FIAP · Challenge 1TDSPX
+          © 2026 Loyalty Platform · FIAP · Challenge 1TDSPW
         </p>
       </div>
     </footer>
