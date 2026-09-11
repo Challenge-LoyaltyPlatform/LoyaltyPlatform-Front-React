@@ -1,5 +1,21 @@
 // src/routes/Contato/index.tsx
+import { useState, type FormEvent } from "react";
+
 export default function Contato() {
+  const [enviado, setEnviado] = useState(false);
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+  
+    setEnviado(true);
+
+    // some com o aviso depois de alguns segundos
+    setTimeout(() => setEnviado(false), 4000);
+
+    e.currentTarget.reset();
+  }
+
   return (
     <main className="min-h-screen bg-[#08081A] text-[#E9EAF1] font-['Sora'] px-6 py-10 md:px-16">
       {/* TÍTULO */}
@@ -22,7 +38,10 @@ export default function Contato() {
       </div>
 
       {/* FORMULÁRIO */}
-      <form className="mt-6 max-w-xl mx-auto px-4 flex flex-col gap-5">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-6 max-w-xl mx-auto px-4 flex flex-col gap-5"
+      >
         <div className="flex flex-col gap-2">
           <label
             htmlFor="nome"
@@ -32,7 +51,9 @@ export default function Contato() {
           </label>
           <input
             id="nome"
+            name="nome"
             type="text"
+            required
             placeholder="Seu nome"
             className="w-full bg-[#E5E5E5] text-black placeholder-gray-500 rounded-full px-5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#5F37F5]"
           />
@@ -47,7 +68,9 @@ export default function Contato() {
           </label>
           <input
             id="email"
+            name="email"
             type="email"
+            required
             placeholder="seu@email.com"
             className="w-full bg-[#E5E5E5] text-black placeholder-gray-500 rounded-full px-5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#5F37F5]"
           />
@@ -62,6 +85,8 @@ export default function Contato() {
           </label>
           <textarea
             id="mensagem"
+            name="mensagem"
+            required
             placeholder="Escreva sua mensagem aqui..."
             rows={6}
             className="w-full bg-[#E5E5E5] text-black placeholder-gray-500 rounded-2xl px-5 py-4 text-sm outline-none resize-none focus:ring-2 focus:ring-[#5F37F5]"
@@ -69,13 +94,37 @@ export default function Contato() {
         </div>
 
         {/* BOTÃO */}
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex flex-col items-center gap-4">
           <button
             type="submit"
             className="inline-block bg-[#6C4DFC] hover:bg-[#5b3ce6] transition text-white text-base font-bold px-10 py-4 rounded-full"
           >
             Enviar mensagem!
           </button>
+
+          {/* CONFIRMAÇÃO DE ENVIO */}
+          <div
+            className={`flex items-center gap-2 text-[#4ADE80] text-sm font-medium transition-all duration-500 ${
+              enviado
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-2 pointer-events-none"
+            }`}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={enviado ? "animate-[check_0.4s_ease-out]" : ""}
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            Mensagem enviada com sucesso!
+          </div>
         </div>
       </form>
     </main>
