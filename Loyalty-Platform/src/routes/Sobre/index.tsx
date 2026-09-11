@@ -1,5 +1,6 @@
 // src/routes/Sobre/index.tsx
 import img1 from '@/img/Img1.png';
+import img2 from '@/img/img2.png';
 
 export default function Sobre() {
   return (
@@ -30,6 +31,41 @@ export default function Sobre() {
           alt="Painel da Loyalty Platform exibindo missões, ranking e nível do usuário"
           className="w-full max-w-none lg:max mx-auto"
         />
+      </section>
+
+      <section
+        aria-labelledby="titulo-problema"
+        className="max-w-6xl mx-auto px-6 py-16 grid items-center gap-10 md:grid-cols-2"
+      >
+        <div className="text-center md:text-left">
+          <p className="inline-block rounded-full border border-[#FC3E8E] px-6 py-2 text-[#FC3E8E]">
+            O problema
+          </p>
+
+          <h2
+            id="titulo-problema"
+            className="mt-8 text-3xl md:text-5xl font-bold text-white leading-tight"
+          >
+            Porque reter usuários é{' '}
+            <span className="text-[#FC3E8E]">tão dificil?</span>
+          </h2>
+
+          <p className="mt-6 text-gray-300 leading-relaxed md:max-w-md">
+            As empresas investem cada vez mais em captação, mas ignoram a
+            retenção, e os números mostram o preço disso.
+          </p>
+        </div>
+
+        <figure className="m-0">
+          <img
+            src={img2}
+            alt="Gráfico da porcentagem de retenção de usuários"
+            className="w-full"
+          />
+          <figcaption className="mt-4 text-right text-white">
+            *dados reais Soulup*
+          </figcaption>
+        </figure>
       </section>
     </main>
   );
