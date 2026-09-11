@@ -1,6 +1,7 @@
 // src/routes/Sobre/index.tsx
 import img1 from '@/img/Img1.png';
 import img2 from '@/img/img2.png';
+import img3 from '@/img/img3.png';
 
 export default function Sobre() {
   return (
@@ -93,6 +94,40 @@ export default function Sobre() {
             empresas criam experiências interativas voltadas ao seu público, sem
             precisar desenvolver essa estrutura do zero.
           </p>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="titulo-ranking"
+        className="max-w-6xl mx-auto px-6 py-16"
+      >
+        <p className="inline-block rounded-full border border-[#5B2EFF] px-6 py-2 text-[#5B2EFF]">
+          Ranking
+        </p>
+
+        <h2
+          id="titulo-ranking"
+          className="mt-10 text-base md:text-5xl font-bold text-white leading-tight">
+          Competição real,{' '}
+          <span className="text-[#FC3E8E]">recompensa real</span>
+        </h2>
+
+        <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+          <p className="text-lg text-gray-300 leading-relaxed">
+            Quanto mais você se <span className="text-[#FC3E8E]">engaja</span> na
+            plataforma, maior é a sua posição no ranking. Cada interação conta,
+            seja ela consumir conteúdo, participar de comunidades, completar
+            missões e realizar ações sustentáveis, tudo contribui para a sua
+            pontuação. O sistema é contínuo e atualizado em tempo real,
+            garantindo que o usuário mais ativo sempre esteja no topo. E quem
+            chega lá, é recompensado de verdade!
+          </p>
+
+          <img
+            src={img3}
+            alt="Card de ranking "
+            className="w-full max-w-md mx-auto"
+          />
         </div>
       </section>
     </main>
