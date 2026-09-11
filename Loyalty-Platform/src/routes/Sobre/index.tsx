@@ -67,6 +67,34 @@ export default function Sobre() {
           </figcaption>
         </figure>
       </section>
+
+      <section
+        aria-labelledby="titulo-solucao"
+        className="max-w-6xl mx-auto px-6 py-16"
+      >
+        <p className="inline-block rounded-full border border-[#5B2EFF] px-6 py-2 text-[#5B2EFF]">
+          Solução
+        </p>
+
+        <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+          <h2
+            id="titulo-solucao"
+            className="text-3xl md:text-5xl font-bold text-white leading-tight"
+          >
+            Como a{' '}
+            <span className="block bg-gradient-to-r from-[#FF7A3D] via-[#FC3E8E] to-[#FC3E8E] bg-clip-text text-transparent">
+              Loyalty Platform
+            </span>
+            resolve isso?
+          </h2>
+
+          <p className="text-lg text-gray-300 text-xl leading-relaxed md:max-w-xl">
+            Por meio de um ambiente próprio, intuitivo e personalizável, as
+            empresas criam experiências interativas voltadas ao seu público, sem
+            precisar desenvolver essa estrutura do zero.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }
