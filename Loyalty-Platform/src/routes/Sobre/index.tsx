@@ -2,6 +2,7 @@
 import img1 from '@/img/Img1.png';
 import img2 from '@/img/img2.png';
 import img3 from '@/img/img3.png';
+import img4 from '@/img/img4.svg';
 
 export default function Sobre() {
   return (
@@ -126,6 +127,38 @@ export default function Sobre() {
           <img
             src={img3}
             alt="Card de ranking "
+            className="w-full max-w-md mx-auto"
+          />
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="titulo-streak"
+        className="max-w-6xl mx-auto px-6 py-16"
+      >
+        <p className="inline-block rounded-full border border-[#5B2EFF] px-6 py-2 text-[#5B2EFF]">
+          Streak | PET
+        </p>
+
+        <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+          <div>
+            <h2
+              id="titulo-streak"
+              className="text-3xl md:text-5xl font-bold text-white leading-tight"
+            >
+              Compartilhe!
+            </h2>
+
+            <p className="mt-6 text-lg text-gray-300 leading-relaxed">
+              Dentro da plataforma, você pode compartilhar posts diretamente
+              pelo chat com outros usuários. Cada compartilhamento conta como
+              engajamento diário para a streak não acabar.
+            </p>
+          </div>
+
+          <img
+            src={img4}
+            alt="Card de streak mostrando uma sequência de 12 dias e a melhor sequência de 24 dias."
             className="w-full max-w-md mx-auto"
           />
         </div>
