@@ -1,1 +1,0 @@
-# LoyaltyPlatform-Front-React
