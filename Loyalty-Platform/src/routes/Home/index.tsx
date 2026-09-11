@@ -4,21 +4,25 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#08081A] text-[#E9EAF1] font-['Sora'] px-6 py-10 md:px-16">
       {/* HEADER */}
-      <header className="flex flex-col md:flex-row md:items-center justify-center gap-6 md:gap-16 border-b border-white/10 pb-10">
-        <img src={logoPrincipal} alt="logo principal" className="h-16 md:h-20 w-auto" />
+     <header className="flex flex-col md:flex-row md:items-center justify-center gap-6 md:gap-16 border-b border-white/10 pb-10">
+        <img
+          src={logoPrincipal}
+          alt="logo principal"
+          className="h-12 sm:h-16 md:h-20 w-auto max-w-[80%] mx-auto md:mx-0 shrink-0 object-contain"
+        />
 
-        <div className="text-right">
-          <h1 className="text-2xl md:text-3xl font-semibold text-[#E9EAF1]">
+        <div className="text-center md:text-right">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#E9EAF1]">
             Gamificação que engaja.
           </h1>
-          <h2 className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-[#5F37F5] via-[#FC3E8E] to-[#FC952E] bg-clip-text text-transparent">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold bg-gradient-to-r from-[#5F37F5] via-[#FC3E8E] to-[#FC952E] bg-clip-text text-transparent">
             Resultados que fidelizam.
           </h2>
         </div>
       </header>
 
       {/* QUEM SOMOS */}
-      <section className="max-w-2xl mx-auto text-center mt-14">
+      <section className="max-w-2xl mx-auto text-center mt-14 px-4">
         <h1 className="text-2xl md:text-3xl font-bold mb-4">Quem somos?</h1>
 
         <p className="text-sm md:text-base text-[#C5C6D6] leading-relaxed">
