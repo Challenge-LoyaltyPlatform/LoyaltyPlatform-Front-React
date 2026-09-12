@@ -5,12 +5,18 @@ import img2 from '@/img/img2.png';
 import img3 from '@/img/img3.png';
 import img4 from '@/img/img4.svg';
 import soulpinho from '@/img/soulpinho1.svg';
-import soulpinho2 from '@/img/soulpinho2.png'
-import soulpinho3 from '@/img/soulpinho3.png'
-import barrinhaMetade from '@/img/barrinha na metade.png'
-import barrinhaVazia from '@/img/barrinha vazia.png'
+import soulpinho2 from '@/img/soulpinho2.png';
+import soulpinho3 from '@/img/soulpinho3.png';
+import barrinhaMetade from '@/img/barrinha na metade.png';
+import barrinhaVazia from '@/img/barrinha vazia.png';
+import { useEffect } from 'react';
+
+
 
 export default function Sobre() {
+    useEffect(() => {
+      document.title = 'Sobre | Loyalty Platform';
+    }, []);
   return (
     <main className="min-h-screen bg-[#08081A]">
       <section

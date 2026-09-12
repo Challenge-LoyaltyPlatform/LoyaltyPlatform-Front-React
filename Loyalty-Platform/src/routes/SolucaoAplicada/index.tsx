@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import soulpinho1 from "@/img/soulpinho1.svg";
 import soulpinho2 from "@/img/soulpinho2.png";
 import soulpinho3 from "@/img/soulpinho3.png";
+import { useEffect } from 'react';
 
 type Usuario = {
   id: number;
@@ -85,7 +86,10 @@ export default function SolucaoAplicada() {
 
     form.reset();
   }
-
+  
+  useEffect(() => {
+      document.title = 'Solução | Loyalty Platform';
+    }, []);
   return (
     <main className="min-h-screen bg-[#08081A] text-[#E9EAF1] font-['Sora'] px-6 py-10 md:px-16">
       {/* TÍTULO */}
@@ -93,7 +97,7 @@ export default function SolucaoAplicada() {
         <h1 className="text-2xl md:text-4xl font-bold leading-tight">
           Solução aplicada com metodologia{" "}
           <span className="bg-gradient-to-r from-[#FF7A3D] to-[#FC3E8E] bg-clip-text text-transparent">
-            Loyalty Platform?
+            Loyalty Platform
           </span>
         </h1>
       </section>
