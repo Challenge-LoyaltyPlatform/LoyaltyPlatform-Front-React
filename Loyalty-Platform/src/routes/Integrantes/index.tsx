@@ -3,6 +3,7 @@ import fotoFelipe from '@/img/fotoFelipe.jpg';
 import fotoHenrique from '@/img/fotoHenrique.jpg';
 import fotoLuiz from '@/img/fotoLuiz.jpg';
 import CardIntegrante from './CardIntegrante';
+import { useEffect } from 'react';
 
 type Integrante = {
   id: number;
@@ -21,6 +22,9 @@ const integrantes: Integrante[] = [
 ];
 
 export default function Integrantes(){
+    useEffect(() => {
+      document.title = 'Integrantes | Loyalty Platform';
+    }, []);
   return (
     <main className="min-h-screen bg-[#08081A] px-6 py-16">
       <section className="max-w-3xl mx-auto text-center"> {/* ALINHA A CAIXA DO CONTEÚDO NA PÁGINA*/}
