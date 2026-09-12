@@ -1,6 +1,7 @@
 // src/routes/Duvidas/index.tsx
 import FaqCard from './FaqCard';
 import { Link } from 'react-router';
+import { useEffect } from 'react';
 
 interface FaqItem {
   id: string;
@@ -50,6 +51,9 @@ const faqData: FaqItem[] = [
 ];
 
 export default function Duvidas() {
+    useEffect(() => {
+      document.title = 'Duvidas | Loyalty Platform';
+    }, []);
   return (
     <main className="min-h-screen bg-[#0a0a1a] px-4 py-16">
       <header className="text-center mb-12">

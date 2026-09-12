@@ -1,6 +1,11 @@
 import logoPrincipal from "../../img/LOGO PRINCIPAL.png";
+import { useEffect } from 'react';
+
 
 export default function Home() {
+    useEffect(() => {
+      document.title = 'Home | Loyalty Platform';
+    }, []);
   return (
     <main className="min-h-screen bg-[#08081A] text-[#E9EAF1] font-['Sora'] px-6 py-10 md:px-16">
       {/* HEADER */}
