@@ -9,6 +9,7 @@ const links = [
   { to: '/integrantes', label: 'Integrantes' },
   { to: '/duvidas', label: 'Dúvidas' },
   { to: '/contato', label: 'Contato' },
+  { to: '/solucao', label: 'Solução' },
 ];
 
 export default function Cabecalho() {
@@ -31,7 +32,6 @@ export default function Cabecalho() {
   return (
     <div className="bg-[#08081A] px-4 sm:px-6 pt-4 sm:pt-6 pb-4">
       <header className="max-w-6xl mx-auto bg-[#13142A] border border-white/10 rounded-2xl px-4 sm:px-8 py-4 flex items-center justify-between">
-        {/* TODO: substituir por <img src="/logo.svg" alt="Loyalty Platform" /> quando tiver a imagem */}
         <div className="flex items-center gap-2">
           <img src={logoPositiva} alt="Loyalty Platform" className="h-8 w-auto" />
         </div>
