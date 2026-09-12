@@ -4,6 +4,8 @@ import img2 from '@/img/img2.png';
 import img3 from '@/img/img3.png';
 import img4 from '@/img/img4.svg';
 import soulpinho from '@/img/soulpinho1.svg';
+import soulpinho2 from '@/img/soulpinho2.png'
+import barrinhaMetade from '@/img/barrinha na metade.png'
 
 export default function Sobre() {
   return (
@@ -195,7 +197,36 @@ export default function Sobre() {
             />
             <p className="mt-3 text-sm text-white">Engajamento: 100%</p>
           </div>
+
+          <div>
+            <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+               Ele sente sua falta!
+            </h3>
+
+            <p className="mt-6 text-lg text-gray-300 leading-relaxed">
+              Fique um dia sem interagir na plataforma e seu mascote começa a definhar. Ele perde energia,{' '}
+              <span className="text-[#FC3E8E]">fica cabisbaixo e para de reagir. </span>.
+              Quanto mais tempo você fica ausente, pior ele fica!
+            </p>
+
+          </div> 
+          <div className="mx-auto w-full max-w-xs text-center">
+            <p className="font-bold text-[#8B5CF6]">SoulUpinho</p>
+
+            <img
+              src={soulpinho2}
+              alt="SoulUpinho sem engajamento"
+              className="mx-auto w-full"
+            />
+
+            <img src={barrinhaMetade} alt="" className="mt-4 w-full" />
+            <p className="mt-3 text-sm text-white">Engajamento: 50%</p>
+          </div> 
+
+
         </div>
+
+      
       </section>
     </main>
   );
