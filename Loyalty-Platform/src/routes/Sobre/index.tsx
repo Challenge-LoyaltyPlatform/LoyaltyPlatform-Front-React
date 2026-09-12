@@ -3,6 +3,7 @@ import img1 from '@/img/Img1.png';
 import img2 from '@/img/img2.png';
 import img3 from '@/img/img3.png';
 import img4 from '@/img/img4.svg';
+import soulpinho from '@/img/soulpinho1.svg';
 
 export default function Sobre() {
   return (
@@ -161,6 +162,39 @@ export default function Sobre() {
             alt="Card de streak mostrando uma sequência de 12 dias e a melhor sequência de 24 dias."
             className="w-full max-w-md mx-auto"
           />
+        </div>
+
+        <div className="mt-16 grid items-center gap-10 md:grid-cols-2">
+          <div>
+            <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+              Pet: Cuide do seu mascote, não deixe ele morrer.
+            </h3>
+
+            <p className="mt-6 text-lg text-gray-300 leading-relaxed">
+              Cada dia que você interage na plataforma, seu mascote fica{' '}
+              <span className="text-[#FC3E8E]">mais feliz e cheio de vida</span>.
+            </p>
+          </div>
+
+          <div className="mx-auto w-full max-w-xs text-center">
+            <p className="font-bold text-[#8B5CF6]">SoulUpinho</p>
+
+            <img
+              src={soulpinho}
+              alt="SoulUpinho"
+              className="mx-auto w-full"
+            />
+
+            <div
+              role="progressbar"
+              aria-label="Engajamento do mascote"
+              aria-valuenow={100}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              className="h-2 w-full rounded-full bg-[#8B5CF6]"
+            />
+            <p className="mt-3 text-sm text-white">Engajamento: 100%</p>
+          </div>
         </div>
       </section>
     </main>
