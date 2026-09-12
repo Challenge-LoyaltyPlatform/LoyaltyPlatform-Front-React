@@ -5,7 +5,9 @@ import img3 from '@/img/img3.png';
 import img4 from '@/img/img4.svg';
 import soulpinho from '@/img/soulpinho1.svg';
 import soulpinho2 from '@/img/soulpinho2.png'
+import soulpinho3 from '@/img/soulpinho3.png'
 import barrinhaMetade from '@/img/barrinha na metade.png'
+import barrinhaVazia from '@/img/barrinha vazia.png'
 
 export default function Sobre() {
   return (
@@ -200,7 +202,7 @@ export default function Sobre() {
 
           <div>
             <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-               Ele sente sua falta!
+              Ele sente sua falta!
             </h3>
 
             <p className="mt-6 text-lg text-gray-300 leading-relaxed">
@@ -209,7 +211,7 @@ export default function Sobre() {
               Quanto mais tempo você fica ausente, pior ele fica!
             </p>
 
-          </div> 
+          </div>
           <div className="mx-auto w-full max-w-xs text-center">
             <p className="font-bold text-[#8B5CF6]">SoulUpinho</p>
 
@@ -221,12 +223,36 @@ export default function Sobre() {
 
             <img src={barrinhaMetade} alt="" className="mt-4 w-full" />
             <p className="mt-3 text-sm text-white">Engajamento: 50%</p>
-          </div> 
+          </div>
+
+          <div>
+            <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+              Você o abandonou!
+            </h3>
+
+            <p className="mt-6 text-lg text-gray-300 leading-relaxed">
+              Quando o usuário fica ausente por tempo demais,{' '}
+              <span className="text-[#FC3E8E]">o mascote morre.</span>
+              A tela fica cinza, ele some e no lugar aparece apenas a lembrança do que ele era. Para trazê-lo de volta, você precisa resgatar o vínculo: três dias consecutivos de engajamento diário na plataforma.
+            </p>
+
+          </div>
+          <div className="mx-auto w-full max-w-xs text-center">
+            <p className="font-bold text-[#8B5CF6]">SoulUpinho</p>
+            <img
+              src={soulpinho3}
+              alt="SoulUpinho sem engajamento"
+              className="mx-auto w-full"
+            />
+
+            <img src={barrinhaVazia} alt="" className="mt-4 w-full" />
+            <p className="mt-3 text-sm text-white">Engajamento: 0%</p>
+          </div>
 
 
         </div>
 
-      
+
       </section>
     </main>
   );
