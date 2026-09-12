@@ -1,4 +1,5 @@
 // src/routes/Sobre/index.tsx
+import { Link } from 'react-router';
 import img1 from '@/img/Img1.png';
 import img2 from '@/img/img2.png';
 import img3 from '@/img/img3.png';
@@ -253,6 +254,32 @@ export default function Sobre() {
         </div>
 
 
+      </section>
+
+      <section
+        aria-labelledby="titulo-cta"
+        className="max-w-6xl mx-auto px-6 py-16 text-center"
+      >
+        <h2
+          id="titulo-cta"
+          className="text-2xl md:text-3xl font-bold text-white"
+        >
+          Quer ver a plataforma em ação?
+        </h2>
+
+        <p className="mt-3 text-gray-300">
+          Conheça a <span className="text-[#FC3E8E]">equipe</span> por trás da
+          Loyalty Platform
+        </p>
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            to="/integrantes"
+            className="inline-block bg-[#6C4DFC] hover:bg-[#5b3ce6] transition text-white text-base font-bold px-10 py-4 rounded-full"
+          >
+            Conheça a equipe!
+          </Link>
+        </div>
       </section>
     </main>
   );
