@@ -12,7 +12,7 @@ export default function CardIntegrante({ nome, rm, foto, linkedin, github }: Car
       <img
         src={foto}
         alt={`Foto de ${nome}`}
-        className="w-full h-64 object-cover"
+        className="w-full aspect-[4/3] object-cover object-top"
       />
       <div className="p-5 text-center">
         <h2 className="text-white font-bold text-lg">{nome}</h2>
