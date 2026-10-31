@@ -9,6 +9,7 @@ import Duvidas from './routes/Duvidas'
 import Contato from './routes/Contato'
 import SolucaoAplicada from './routes/SolucaoAplicada'
 import Error from './routes/Error'
+import Login from './routes/Login'
 import AuthProvider from './contexts/AuthProvider'
 import '@fontsource/sora/400.css'
 import '@fontsource/sora/600.css'
@@ -29,6 +30,8 @@ const router = createBrowserRouter([
       { path: '/solucao', element: <SolucaoAplicada /> },
     ],
   },
+  // Login ocupa a tela inteira, sem cabeçalho e rodapé
+  { path: '/login', element: <Login />, errorElement: <Error /> },
 ])
 
 createRoot(document.getElementById('root')!).render(
