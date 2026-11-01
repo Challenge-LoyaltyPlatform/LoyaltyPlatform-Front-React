@@ -15,6 +15,8 @@ import '@fontsource/sora/400.css'
 import '@fontsource/sora/600.css'
 import '@fontsource/sora/700.css'
 import './index.css'
+import AdminLayout from './components/AdminLayout';
+import EmpresasClientes from './routes/EmpresasClientes/index.tsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,13 @@ const router = createBrowserRouter([
   },
   // Login ocupa a tela inteira, sem cabeçalho e rodapé
   { path: '/login', element: <Login />, errorElement: <Error /> },
+  // Painel do administrador: sidebar própria, sem cabeçalho e rodapé do site
+  {
+    path: '/admin',
+    element: <AdminLayout />,
+    errorElement: <Error />,
+    children: [{ path: 'empresas', element: <EmpresasClientes/> }],
+  },
 ])
 
 createRoot(document.getElementById('root')!).render(
