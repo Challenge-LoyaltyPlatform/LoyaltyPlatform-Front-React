@@ -9,16 +9,17 @@ type Integrante = {
   id: number;
   nome: string;
   rm: string;
+  turma: string;
   foto: string;
   linkedin: string;
   github: string;
 };
 
 const integrantes: Integrante[] = [
-  { id: 1, nome: 'Andrei Oliveira de Sousa', rm: '573373', foto: fotoAndrei, linkedin: 'https://www.linkedin.com/in/andrei-sousa-55662825a/', github: 'https://github.com/andreisou-dev'},
-  { id: 2, nome: 'Felipe Coelho da Fonseca', rm: '572133', foto: fotoFelipe,   linkedin: 'https://www.linkedin.com/in/felipe-coelho-80b78a394/', github: 'https://github.com/devfcoelho' },
-  { id: 3, nome: 'Henrique Soares Pereira', rm: '569898', foto: fotoHenrique, linkedin: 'https://www.linkedin.com/in/henrique-soares-pereira/', github: 'https://github.com/Henriquesope' },
-  { id: 4, nome: 'Luiz Felipe Lourenço da Silva', rm: '572576', foto: fotoLuiz,   linkedin: 'https://www.linkedin.com/in/lfelipelourenco/', github: 'https://github.com/devlipee' },
+  { id: 1, nome: 'Andrei Oliveira de Sousa', rm: '573373', turma: '1TDSPW', foto: fotoAndrei, linkedin: 'https://www.linkedin.com/in/andrei-sousa-55662825a/', github: 'https://github.com/andreisou-dev'},
+  { id: 2, nome: 'Felipe Coelho da Fonseca', rm: '572133', turma: '1TDSPW', foto: fotoFelipe,   linkedin: 'https://www.linkedin.com/in/felipe-coelho-80b78a394/', github: 'https://github.com/devfcoelho' },
+  { id: 3, nome: 'Henrique Soares Pereira', rm: '569898', turma: '1TDSPW', foto: fotoHenrique, linkedin: 'https://www.linkedin.com/in/henrique-soares-pereira/', github: 'https://github.com/Henriquesope' },
+  { id: 4, nome: 'Luiz Felipe Lourenço da Silva', rm: '572576', turma: '1TDSPW', foto: fotoLuiz,   linkedin: 'https://www.linkedin.com/in/lfelipelourenco/', github: 'https://github.com/devlipee' },
 ];
 
 export default function Integrantes(){
@@ -43,6 +44,7 @@ export default function Integrantes(){
             key={integrante.id}
             nome={integrante.nome}
             rm={integrante.rm}
+            turma={integrante.turma}
             foto={integrante.foto}
             linkedin={integrante.linkedin}
             github={integrante.github}

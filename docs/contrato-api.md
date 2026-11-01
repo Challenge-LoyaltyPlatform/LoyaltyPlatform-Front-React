@@ -1,8 +1,8 @@
 # Contrato da API — Loyalty Platform
 
-Este documento define o que o front-end (React) espera da API Java (Spring Boot). Ele é a referência para implementar os controllers, os DTOs e as alterações no banco Oracle.
+Este documento define o que o front-end (React) troca com a API Java (Spring Boot): rotas, formatos de JSON e erros.
 
-> **Status:** recurso `/empresas` e `/auth/login` já consumidos pelo front (branch `feature/integracao-empresas`). Campanhas e missões estão em rascunho (seção 6) e entram na próxima feature.
+> **Status:** todos os recursos deste documento estão implementados na API Java ([Challenge-LoyaltyPlatform/Java-LoyaltyPlatform4](https://github.com/Challenge-LoyaltyPlatform/Java-LoyaltyPlatform4)). O front consome `/auth/login` e `/empresas`; campanhas, missões, ranking e métricas (seção 6) já existem na API e ficam para o painel da empresa cliente.
 
 ---
 
@@ -21,26 +21,11 @@ Este documento define o que o front-end (React) espera da API Java (Spring Boot)
 
 ### 1.1 CORS (obrigatório)
 
-O navegador só deixa o front chamar a API se ela responder com os cabeçalhos de CORS.
+O navegador só deixa o front chamar a API se ela responder com os cabeçalhos de CORS. Na API isso é feito pela classe `CorsFilter`, que roda antes de qualquer outro filtro (assim até as respostas 401 e 404 levam os cabeçalhos).
 
-- Origens permitidas: `http://localhost:5173` e a URL da Vercel (ex.: `https://loyalty-platform.vercel.app`)
+- Origens permitidas: variável de ambiente `CORS_ORIGENS`, separadas por vírgula. Padrão: `http://localhost:5173`, `http://localhost:4173` e `https://*.vercel.app`. Depois do deploy do front, troque `https://*.vercel.app` pela URL exata da Vercel
 - Métodos: `GET, POST, PUT, PATCH, DELETE, OPTIONS`
 - Cabeçalhos: `Content-Type, Authorization`
-
-Exemplo em Spring Boot:
-
-```java
-@Configuration
-public class CorsConfig implements WebMvcConfigurer {
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "https://SEU-PROJETO.vercel.app")
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowedHeaders("Content-Type", "Authorization");
-    }
-}
-```
 
 ### 1.2 Formato de erro (todas as respostas 4xx e 5xx)
 
@@ -59,14 +44,16 @@ public class CorsConfig implements WebMvcConfigurer {
 
 | Status | Quando usar |
 |---|---|
-| 400 | Falha de validação (Bean Validation) → preencher `campos` |
-| 401 | Login inválido ou token ausente/expirado |
-| 403 | Logado, mas sem permissão (ex.: perfil EMPRESA chamando rota de admin) |
-| 404 | Registro não existe |
-| 409 | Violação de regra/unicidade (CNPJ ou e-mail duplicado, empresa já inativa) |
-| 500 | Erro inesperado (não expor stack trace) |
+| 400 | Dados inválidos (Bean Validation ou regra do BO) → `campos` preenchido; id não numérico na URL |
+| 401 | Login inválido ou token ausente, inválido ou expirado |
+| 403 | Logado, mas sem permissão (perfil EMPRESA em rota de admin ou dados de outra empresa) ou login de empresa inativa |
+| 404 | Registro não existe (inclusive missão excluída) ou rota inexistente |
+| 405 | Verbo não suportado na rota (ex.: `DELETE /empresas/{id}`) |
+| 409 | Regra de negócio ou unicidade (CNPJ ou e-mail duplicado, status já aplicado, campanha encerrada) |
+| 415 | Corpo enviado sem `Content-Type: application/json` |
+| 500 | Erro inesperado ou banco fora do ar (sem stack trace) |
 
-Sugestão: um `@RestControllerAdvice` que converte `MethodArgumentNotValidException` em 400 com `campos`, uma exceção própria de "não encontrado" em 404 e `DataIntegrityViolationException` (constraint `UNIQUE`) em 409.
+Na API, o `GlobalExceptionHandler` (`@RestControllerAdvice`) faz essa conversão; o `AutenticacaoFilter` devolve o 401 no mesmo formato.
 
 ---
 
@@ -103,7 +90,9 @@ Resposta `200` — perfil EMPRESA (traz a empresa de contexto):
 
 Resposta `401`: e-mail ou senha incorretos (o front mostra "E-mail ou senha incorretos.").
 
-**Decisão pendente (BD):** o modelo atual não tem tabela para quem acessa o painel. `TB_USUARIO` é o usuário final do app da empresa cliente. Proposta:
+Resposta `403`: conta de empresa cuja empresa está inativa (inativar a empresa tira o acesso dela ao painel).
+
+**Decisão tomada (BD):** `TB_USUARIO` é o usuário final do app da empresa cliente; quem entra no painel fica na tabela `TB_ACESSO_PAINEL`, criada pelo script `database/03_alteracoes_api_java.sql` do repositório Java. A senha é guardada como hash BCrypt.
 
 ```sql
 CREATE TABLE TB_ACESSO_PAINEL (
@@ -122,7 +111,7 @@ CREATE TABLE TB_ACESSO_PAINEL (
 );
 ```
 
-Sobre o token: o mínimo para o front funcionar é o login validar a senha e devolver um token. Proteger de verdade as rotas `/empresas` exige validar esse token na API (Spring Security + JWT). Se o tempo não permitir, registrar a limitação na documentação em vez de fingir que existe.
+Sobre o token: é um JWT (HS256) com validade de 8 horas, assinado com a variável `JWT_SECRET`. O `AutenticacaoFilter` valida o token em todas as rotas, menos `GET /` e `POST /auth/login`.
 
 ---
 
@@ -170,22 +159,7 @@ Regras de negócio envolvidas: somente o Administrador da Loyalty cadastra, inat
 
 Em DDD, `identidadeVisual` é um **objeto de valor** (sem id próprio): no Java pode ser um `record IdentidadeVisual(String corPrincipal, Tipografia tipografia, FormaBotoes formaBotoes)` e, no banco, três colunas da própria `TB_EMPRESA`.
 
-Alteração no banco:
-
-```sql
-ALTER TABLE TB_EMPRESA ADD (
-  razao_social_empresa  VARCHAR2(150),
-  cor_principal_empresa CHAR(7)      DEFAULT '#5F37F5'     NOT NULL,
-  tipografia_empresa    VARCHAR2(20) DEFAULT 'SORA'        NOT NULL,
-  forma_botoes_empresa  VARCHAR2(20) DEFAULT 'ARREDONDADO' NOT NULL,
-  CONSTRAINT TB_EMPRESA_COR_CK        CHECK (REGEXP_LIKE(cor_principal_empresa, '^#[0-9A-Fa-f]{6}$')),
-  CONSTRAINT TB_EMPRESA_TIPOGRAFIA_CK CHECK (tipografia_empresa IN ('SORA', 'INTER', 'POPPINS')),
-  CONSTRAINT TB_EMPRESA_FORMA_CK      CHECK (forma_botoes_empresa IN ('PILULA', 'ARREDONDADO', 'RETO'))
-);
--- Preencha a razão social das linhas existentes e depois torne obrigatória:
-UPDATE TB_EMPRESA SET razao_social_empresa = nome_empresa WHERE razao_social_empresa IS NULL;
-ALTER TABLE TB_EMPRESA MODIFY razao_social_empresa NOT NULL;
-```
+Alteração no banco: feita pelo script `database/03_alteracoes_api_java.sql` do repositório Java. Ele cria as quatro colunas novas (razão social obrigatória e identidade visual com valores padrão), preenche as empresas da carga inicial e adiciona constraints de formato para cor, tipografia, forma dos botões, CNPJ e telefone.
 
 ### 3.2 Objeto `EmpresaRequest` (corpo do POST e do PUT)
 
@@ -197,22 +171,22 @@ Validações que o front já faz e que a API **também** precisa fazer (o front 
 |---|---|
 | `razaoSocial` | obrigatório, até 150 |
 | `nomeFantasia` | obrigatório, até 100 |
-| `cnpj` | obrigatório, 14 caracteres, dígitos verificadores válidos (algoritmo abaixo), único |
+| `cnpj` | obrigatório, formato de 12 letras ou números + 2 dígitos, único |
 | `email` | obrigatório, formato de e-mail, até 100, único (o front envia em minúsculas) |
 | `telefone` | opcional; se vier, 10 ou 11 dígitos |
 | `identidadeVisual.*` | obrigatórios; cor no formato `#RRGGBB`, enums válidos |
 
-Dígito verificador do CNPJ (vale para o numérico e o alfanumérico): cada caractere vale `código ASCII − 48` ('0'..'9' = 0..9, 'A'..'Z' = 17..42); pesos de 2 a 9 da direita para a esquerda, reiniciando em 2; `resto = soma % 11`; dígito = `resto < 2 ? 0 : 11 − resto`. O primeiro dígito usa as 12 primeiras posições; o segundo, as 12 + o primeiro dígito. A implementação de referência está em `Loyalty-Platform/src/utils/cnpj.ts`.
+O dígito verificador do CNPJ **não** é calculado: por decisão do grupo, front, API e banco conferem só o formato.
 
 ### 3.3 Endpoints
 
 | Método e caminho | Descrição | Sucesso | Erros |
 |---|---|---|---|
-| `GET /empresas` | Lista todas as empresas (o front filtra e busca localmente) | `200` + `Empresa[]` (lista vazia = `[]`, nunca 404) | 401, 403 |
-| `GET /empresas/{id}` | Detalhe de uma empresa | `200` + `Empresa` | 401, 403, **404** |
-| `POST /empresas` | Cadastra empresa. Nasce com `status = ATIVA` e `dataCadastro` = hoje | **`201`** + `Empresa` criada | 400 (`campos`), **409** CNPJ/e-mail duplicado (`campos.cnpj` / `campos.email`) |
-| `PUT /empresas/{id}` | Substitui os dados cadastrais e a identidade visual | `200` + `Empresa` atualizada | 400, 404, 409 |
-| `PATCH /empresas/{id}/status` | Inativa ou reativa. Corpo: `{ "status": "INATIVA" }` | `200` + `Empresa` atualizada | 404, **409** se já estiver no status pedido |
+| `GET /empresas` | Lista todas as empresas (o front filtra e busca localmente). Só ADMIN | `200` + `Empresa[]` (lista vazia = `[]`, nunca 404) | 401, 403 |
+| `GET /empresas/{id}` | Detalhe de uma empresa. ADMIN ou a própria empresa | `200` + `Empresa` | 400, 401, 403, **404** |
+| `POST /empresas` | Cadastra empresa. Nasce com `status = ATIVA` e `dataCadastro` = hoje. Só ADMIN | **`201`** + `Empresa` criada | 400 (`campos`), 401, 403, **409** CNPJ/e-mail duplicado (`campos.cnpj` / `campos.email`) |
+| `PUT /empresas/{id}` | Substitui os dados cadastrais e a identidade visual. Só ADMIN | `200` + `Empresa` atualizada | 400, 401, 403, 404, 409 |
+| `PATCH /empresas/{id}/status` | Inativa ou reativa. Corpo: `{ "status": "INATIVA" }`. Só ADMIN | `200` + `Empresa` atualizada | 400, 401, 403, 404, **409** se já estiver no status pedido |
 
 No `PATCH` para `INATIVA`, a API deve, na mesma transação, encerrar as campanhas ativas da empresa (`status_campanha = 'ENCERRADA'`). A pontuação já conquistada pelos usuários não é tocada (RN16). Para `ATIVA`, não mexer nas campanhas.
 
@@ -234,24 +208,39 @@ O front sempre usa o objeto devolvido pelo `PUT`/`PATCH` para atualizar a tela, 
 
 ## 5. Publicação
 
+- URL da API publicada (Render): _a preencher após o deploy_.
 - A API precisa estar no ar com **HTTPS** e a URL precisa ir para o README do front (rubrica: 5 pontos).
 - Na Vercel, cadastrar `VITE_API_URL` em *Settings → Environment Variables* e refazer o deploy (variáveis `VITE_` entram no build, não em tempo de execução).
 - Hospedagem gratuita costuma "dormir": a primeira chamada pode levar dezenas de segundos. O front espera até 30 s antes de mostrar erro.
 
 ---
 
-## 6. Rascunho — painel da empresa cliente (próxima feature)
+## 6. Painel da empresa cliente (implementado na API)
 
-Ainda **não** consumido pelo front. Serve para planejar o Java e o banco; pode mudar.
+Já implementado e testado na API Java, mas ainda **não** consumido pelo front: quem entra com perfil EMPRESA cai na Home, porque o painel da empresa ainda não tem telas. O ADMIN acessa qualquer empresa; o perfil EMPRESA, só a própria (senão, 403).
 
-| Método e caminho | Uso |
-|---|---|
-| `GET /empresas/{idEmpresa}/campanhas` | Lista campanhas da empresa de contexto (com total de missões) |
-| `POST /empresas/{idEmpresa}/campanhas` | Cria campanha; nasce `INATIVA` |
-| `GET /campanhas/{id}` | Detalhe com a lista de missões |
-| `PUT /campanhas/{id}` | Edita nome, descrição e datas |
-| `PATCH /campanhas/{id}/status` | `ATIVA` (exige ≥ 1 missão ativa, senão 409), `INATIVA`, `ENCERRADA` (terminal, RN23) |
-| `POST /campanhas/{id}/missoes` | Cadastra missão (meta e pontos inteiros positivos) |
-| `DELETE /missoes/{id}` | Exclusão lógica: `status_missao = 'EXCLUIDA'` (RN25), responde `204` |
+| Método e caminho | Uso | Sucesso |
+|---|---|---|
+| `GET /empresas/{idEmpresa}/campanhas` | Lista as campanhas da empresa com os totais de missões | `200` + `Campanha[]` |
+| `POST /empresas/{idEmpresa}/campanhas` | Cria campanha; nasce `INATIVA` | `201` + `Campanha` |
+| `GET /campanhas/{id}` | Detalhe da campanha com a lista de missões | `200` + `Campanha` |
+| `PUT /campanhas/{id}` | Edita nome, descrição e datas (campanha encerrada não muda) | `200` + `Campanha` |
+| `PATCH /campanhas/{id}/status` | `ATIVA` (exige ≥ 1 missão ativa, senão 409), `INATIVA` ou `ENCERRADA` (terminal, RN23) | `200` + `Campanha` |
+| `DELETE /campanhas/{id}` | Exclui rascunho: campanha inativa e sem participantes | `204` |
+| `GET /campanhas/{idCampanha}/missoes` | Lista as missões da campanha | `200` + `Missao[]` |
+| `POST /campanhas/{idCampanha}/missoes` | Cria missão; nasce `ATIVA` | `201` + `Missao` |
+| `GET /missoes/{id}` | Detalhe da missão | `200` + `Missao` |
+| `PUT /missoes/{id}` | Edita nome, descrição, meta e pontos | `200` + `Missao` |
+| `PATCH /missoes/{id}/status` | `ATIVA` ou `INATIVA` | `200` + `Missao` |
+| `DELETE /missoes/{id}` | Exclusão lógica: `status_missao = 'EXCLUIDA'` (RN25) | `204` |
+| `GET /empresas/{idEmpresa}/ranking` | Ranking de usuários da empresa | `200` |
+| `GET /empresas/{idEmpresa}/metricas` | Engajamento geral e por campanha | `200` |
 
-Enums já existentes no back-end: `StatusCampanha { ATIVA, INATIVA, ENCERRADA }` e `StatusMissao { ATIVA, INATIVA, EXCLUIDA }`. O Figma chama a campanha inativa de "Pausada"; no front o rótulo será "Inativa" para bater com o banco.
+Formatos:
+
+- `Campanha`: `{ id, idEmpresa, nome, descricao, dataInicio, dataFim, status, totalMissoes, missoesAtivas, missoes }`, com `missoes` no detalhe e nas respostas de `POST`, `PUT` e `PATCH`; a listagem traz só os totais
+- Corpo de campanha: `{ nome, descricao, dataInicio, dataFim }` (`dataFim` opcional: campanha contínua)
+- `Missao`: `{ id, idCampanha, nome, descricao, meta, pontosRecompensa, status }`
+- Corpo de missão: `{ nome, descricao, meta, pontosRecompensa }` (meta e pontos inteiros maiores que zero, RN06)
+
+Enums: `StatusCampanha { ATIVA, INATIVA, ENCERRADA }` e `StatusMissao { ATIVA, INATIVA, EXCLUIDA }`. O Figma chama a campanha inativa de "Pausada"; no front o rótulo será "Inativa" para bater com o banco.

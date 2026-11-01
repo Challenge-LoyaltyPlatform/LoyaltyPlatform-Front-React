@@ -49,11 +49,12 @@ Este repositório contém o **front-end** da aplicação, desenvolvido em React 
 | Item | Link |
 |---|---|
 | Repositório no GitHub | [Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React](https://github.com/Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React) |
+| Repositório da API Java | [Challenge-LoyaltyPlatform/Java-LoyaltyPlatform4](https://github.com/Challenge-LoyaltyPlatform/Java-LoyaltyPlatform4) |
 | Aplicação publicada (Vercel) | _a preencher após o deploy_ |
-| API Java publicada | _a preencher após o deploy da API_ |
+| API Java publicada (Render) | _a preencher após o deploy da API_ |
 | Vídeo de apresentação (YouTube) | _a preencher após a gravação_ |
 
-**Acesso ao painel:** clique em **Entrar** no cabeçalho e use as credenciais de administrador cadastradas no banco. Depois do login, o painel abre em `/admin/empresas`.
+**Acesso ao painel:** clique em **Entrar** no cabeçalho e use a conta de administrador `admin@loyalty.com` (criada pelo script `database/03_alteracoes_api_java.sql` do repositório Java; a senha está no comentário do script). Depois do login, o painel abre em `/admin/empresas`. Na primeira chamada depois de um tempo parada, a API pode levar cerca de 1 minuto para acordar.
 
 ---
 
@@ -159,7 +160,14 @@ Todas as chamadas HTTP passam por `src/services/api.ts`, que monta a URL a parti
 | Editar empresa | `PUT` | `/empresas/{id}` | Editar empresa |
 | Inativar/reativar | `PATCH` | `/empresas/{id}/status` | Lista e detalhe |
 
-Os formatos de requisição, resposta e erro estão em [`docs/contrato-api.md`](docs/contrato-api.md).
+Os formatos de requisição, resposta e erro estão em [`docs/contrato-api.md`](docs/contrato-api.md). O CNPJ é validado só pelo formato (12 letras ou números + 2 dígitos), igual à API.
+
+**Rodando com a API local:** suba a API Java em `http://localhost:8080` (passo a passo no README do [repositório Java](https://github.com/Challenge-LoyaltyPlatform/Java-LoyaltyPlatform4)) e deixe o `.env.local` assim:
+
+```env
+VITE_API_URL=http://localhost:8080
+VITE_API_MOCK=false
+```
 
 **Deploy na Vercel:** em *Root Directory* selecione `Loyalty-Platform` e cadastre `VITE_API_URL` (com HTTPS) em *Settings → Environment Variables*.
 
