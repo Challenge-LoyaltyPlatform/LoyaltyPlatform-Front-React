@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import CabecalhoAdmin from '@/components/CabecalhoAdmin';
 import { listarEmpresas } from '@/services/empresaService';
 import type { Empresa } from '@/types/empresa';
 import LinhaEmpresa from './LinhaEmpresa';
+import ModalConfirmacao from './ModalConfirmacao';
 
 type Filtro = 'todas' | 'ativa' | 'inativa';
 
@@ -26,6 +27,7 @@ export default function EmpresasClientes() {
   const [carregando, setCarregando] = useState(true);
   const [busca, setBusca] = useState('');
   const [filtro, setFiltro] = useState<Filtro>('todas');
+  const [empresaEmConfirmacao, setEmpresaEmConfirmacao] = useState<Empresa | null>(null);
 
   useEffect(() => {
     document.title = 'Empresas clientes | Loyalty Platform';
@@ -59,6 +61,28 @@ export default function EmpresasClientes() {
       return nomeConfere || cnpjConfere;
     });
   }, [empresas, busca, filtro]);
+
+  const cancelarConfirmacao = useCallback(() => setEmpresaEmConfirmacao(null), []);
+
+  function confirmarAlteracaoStatus() {
+    if (!empresaEmConfirmacao) return;
+
+    const inativando = empresaEmConfirmacao.status === 'ativa';
+
+    setEmpresas((atuais) =>
+      atuais.map((empresa) =>
+        empresa.id === empresaEmConfirmacao.id
+          ? {
+              ...empresa,
+              status: inativando ? 'inativa' : 'ativa',
+              // Inativar encerra as campanhas; reativar não traz elas de volta
+              campanhasAtivas: inativando ? 0 : empresa.campanhasAtivas,
+            }
+          : empresa,
+      ),
+    );
+    setEmpresaEmConfirmacao(null);
+  }
 
   const filtros: { valor: Filtro; rotulo: string }[] = [
     { valor: 'todas', rotulo: 'Todas' },
@@ -161,7 +185,11 @@ export default function EmpresasClientes() {
                 </tr>
               ) : (
                 empresasFiltradas.map((empresa) => (
-                  <LinhaEmpresa key={empresa.id} empresa={empresa} />
+                  <LinhaEmpresa
+                    key={empresa.id}
+                    empresa={empresa}
+                    onAlterarStatus={setEmpresaEmConfirmacao}
+                  />
                 ))
               )}
             </tbody>
@@ -189,6 +217,14 @@ export default function EmpresasClientes() {
         Inativar uma empresa pede confirmação e encerra as campanhas ativas dela. Reativar devolve o
         acesso, mas não reativa campanhas encerradas.
       </p>
+
+      {empresaEmConfirmacao && (
+        <ModalConfirmacao
+          empresa={empresaEmConfirmacao}
+          onConfirmar={confirmarAlteracaoStatus}
+          onCancelar={cancelarConfirmacao}
+        />
+      )}
     </>
   );
 }

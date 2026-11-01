@@ -39,7 +39,7 @@ const router = createBrowserRouter([
     path: '/admin',
     element: <AdminLayout />,
     errorElement: <Error />,
-    children: [{ path: 'empresas', element: <EmpresasClientes /> }],
+    children: [{ path: 'empresas', element: <EmpresasClientes/> }],
   },
 ])
 

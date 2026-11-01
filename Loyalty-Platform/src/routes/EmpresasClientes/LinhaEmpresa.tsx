@@ -3,9 +3,10 @@ import StatusBadge from './StatusBadge';
 
 type LinhaEmpresaProps = {
   empresa: Empresa;
+  onAlterarStatus: (empresa: Empresa) => void;
 };
 
-export default function LinhaEmpresa({ empresa }: LinhaEmpresaProps) {
+export default function LinhaEmpresa({ empresa, onAlterarStatus }: LinhaEmpresaProps) {
   const ativa = empresa.status === 'ativa';
 
   return (
@@ -37,12 +38,20 @@ export default function LinhaEmpresa({ empresa }: LinhaEmpresaProps) {
           <button type="button" className="text-[#5F37F5] hover:text-[#4E28E0] transition-colors">
             Editar
           </button>
-          {ativa ? (
-            <button type="button" className="text-red-600 hover:text-red-700 transition-colors">
+                    {ativa ? (
+            <button
+              type="button"
+              onClick={() => onAlterarStatus(empresa)}
+              className="text-red-600 hover:text-red-700 transition-colors"
+            >
               Inativar
             </button>
           ) : (
-            <button type="button" className="text-[#5F37F5] hover:text-[#4E28E0] transition-colors">
+            <button
+              type="button"
+              onClick={() => onAlterarStatus(empresa)}
+              className="text-[#5F37F5] hover:text-[#4E28E0] transition-colors"
+            >
               Reativar
             </button>
           )}
