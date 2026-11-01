@@ -5,6 +5,7 @@ import logoPositiva from "@/img/LOGO POSITIVA.svg";
 import AvatarUsuario from './AvatarUsuario';
 import { useAuth } from '@/contexts/AuthContext';
 import type { PerfilUsuario } from '@/types/auth';
+import { rotaDoPainel } from '@/utils/rotas';
 
 const links = [
   { to: '/', label: 'Home', end: true },
@@ -54,6 +55,28 @@ const iconeSair = (
 const botaoEntrarClasses =
   'items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#5F37F5] to-[#FC3E8E] text-white text-sm font-semibold transition-opacity hover:opacity-90';
 
+const botaoPainelClasses =
+  'items-center justify-center gap-2 rounded-full bg-white/10 text-white text-sm font-semibold transition-colors hover:bg-white/20';
+
+const iconePainel = (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <rect x="3" y="3" width="7" height="9" rx="1" />
+    <rect x="14" y="3" width="7" height="5" rx="1" />
+    <rect x="14" y="12" width="7" height="9" rx="1" />
+    <rect x="3" y="16" width="7" height="5" rx="1" />
+  </svg>
+);
+
 const botaoSairClasses =
   'items-center justify-center gap-2 rounded-full border border-white/15 text-gray-300 text-sm font-medium transition-colors hover:text-white hover:border-white/40';
 
@@ -66,6 +89,7 @@ export default function Cabecalho() {
   const [menuAberto, setMenuAberto] = useState(false);
   const { usuario, sair } = useAuth();
   const navigate = useNavigate();
+  const rotaPainel = usuario ? rotaDoPainel(usuario) : null;
 
   function handleSair() {
     sair();
@@ -115,6 +139,12 @@ export default function Cabecalho() {
                 <span className="text-xs text-gray-400">{rotuloPerfil[usuario.perfil]}</span>
               </div>
             </div>
+            {rotaPainel && (
+              <Link to={rotaPainel} className={`inline-flex px-4 py-2 ${botaoPainelClasses}`}>
+                {iconePainel}
+                Painel
+              </Link>
+            )}
             <button
               type="button"
               onClick={handleSair}
@@ -198,6 +228,16 @@ export default function Cabecalho() {
                   <span className="text-xs text-gray-400">{rotuloPerfil[usuario.perfil]}</span>
                 </div>
               </div>
+              {rotaPainel && (
+                <Link
+                  to={rotaPainel}
+                  onClick={() => setMenuAberto(false)}
+                  className={`flex w-full mt-1 px-4 py-3 ${botaoPainelClasses}`}
+                >
+                  {iconePainel}
+                  Acessar painel
+                </Link>
+              )}
               <button
                 type="button"
                 onClick={handleSair}
