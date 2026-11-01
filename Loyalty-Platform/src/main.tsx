@@ -9,7 +9,9 @@ import Duvidas from './routes/Duvidas'
 import Contato from './routes/Contato'
 import SolucaoAplicada from './routes/SolucaoAplicada'
 import Error from './routes/Error'
-import '@fontsource/sora/400.css' 
+import Login from './routes/Login'
+import AuthProvider from './contexts/AuthProvider'
+import '@fontsource/sora/400.css'
 import '@fontsource/sora/600.css'
 import '@fontsource/sora/700.css'
 import './index.css'
@@ -28,10 +30,14 @@ const router = createBrowserRouter([
       { path: '/solucao', element: <SolucaoAplicada /> },
     ],
   },
+  // Login ocupa a tela inteira, sem cabeçalho e rodapé
+  { path: '/login', element: <Login />, errorElement: <Error /> },
 ])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )
