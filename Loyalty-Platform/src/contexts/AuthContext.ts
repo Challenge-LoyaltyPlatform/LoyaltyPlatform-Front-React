@@ -5,6 +5,8 @@ import type { LoginRequest, Usuario } from '@/types/auth';
 export interface AuthContextValue {
   usuario: Usuario | null;
   estaAutenticado: boolean;
+  // true quando a API recusou o token: as rotas protegidas usam para explicar o redirecionamento
+  sessaoExpirada: boolean;
   entrar: (dados: LoginRequest) => Promise<void>;
   sair: () => void;
 }

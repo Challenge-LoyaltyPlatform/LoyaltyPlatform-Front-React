@@ -1,9 +1,12 @@
+// src/components/SidebarAdmin.tsx
+// No celular vira uma barra no topo; a partir do md vira a coluna lateral do Figma
 import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from '@/contexts/AuthContext';
+import { rotas } from '@/utils/rotas';
 
 const links = [
   {
-    to: '/admin/empresas',
+    to: rotas.adminEmpresas,
     label: 'Empresas clientes',
     icone: (
       <>
@@ -20,7 +23,7 @@ export default function SidebarAdmin() {
 
   function handleSair() {
     sair();
-    navigate('/login', { replace: true });
+    navigate(rotas.login, { replace: true });
   }
 
   const linkClasses = ({ isActive }: { isActive: boolean }) =>
@@ -29,7 +32,7 @@ export default function SidebarAdmin() {
     }`;
 
   return (
-    <aside className="flex flex-col bg-white border-b md:border-b-0 md:border-r border-gray-200 px-4 py-5 md:w-60 md:min-h-screen md:shrink-0">
+    <aside className="sticky top-0 z-30 flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-gray-200 bg-white px-4 py-3 md:h-screen md:w-60 md:shrink-0 md:flex-col md:flex-nowrap md:items-stretch md:gap-0 md:border-b-0 md:border-r md:px-4 md:py-5 lg:w-64">
       <div className="flex items-center gap-2 px-1">
         <svg viewBox="0 0 35 59" className="h-7 w-auto" aria-hidden="true">
           <defs>
@@ -54,12 +57,12 @@ export default function SidebarAdmin() {
         </span>
       </div>
 
-      <div className="mt-6 rounded-lg bg-[#F0EEFB] px-3 py-2.5">
+      <div className="mt-6 hidden rounded-lg bg-[#F0EEFB] px-3 py-2.5 md:block">
         <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Acesso</p>
         <p className="text-sm font-semibold text-[#12122A]">Administrador da Loyalty</p>
       </div>
 
-      <nav className="mt-4 flex flex-col gap-1">
+      <nav aria-label="Menu do painel" className="order-last flex w-full gap-1 md:order-none md:mt-4 md:flex-col">
         {links.map(({ to, label, icone }) => (
           <NavLink key={to} to={to} className={linkClasses}>
             <svg
@@ -83,7 +86,7 @@ export default function SidebarAdmin() {
       <button
         type="button"
         onClick={handleSair}
-        className="mt-6 md:mt-auto flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-[#F0EEFB]"
+        className="ml-auto flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-[#F0EEFB] md:ml-0 md:mt-auto"
       >
         <svg
           width="16"

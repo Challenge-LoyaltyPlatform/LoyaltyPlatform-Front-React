@@ -1,8 +1,6 @@
 // src/services/authService.ts
 import { ApiError, requisicao } from './api';
-import type { LoginRequest, LoginResponse, Sessao } from '@/types/auth';
-
-const CHAVE_SESSAO = 'loyalty:sessao';
+import type { LoginRequest, LoginResponse } from '@/types/auth';
 
 export async function login(dados: LoginRequest): Promise<LoginResponse> {
   try {
@@ -14,24 +12,4 @@ export async function login(dados: LoginRequest): Promise<LoginResponse> {
     }
     throw erro;
   }
-}
-
-export function salvarSessao(sessao: Sessao): void {
-  localStorage.setItem(CHAVE_SESSAO, JSON.stringify(sessao));
-}
-
-export function obterSessaoSalva(): Sessao | null {
-  const salva = localStorage.getItem(CHAVE_SESSAO);
-  if (!salva) return null;
-
-  try {
-    return JSON.parse(salva) as Sessao;
-  } catch {
-    localStorage.removeItem(CHAVE_SESSAO);
-    return null;
-  }
-}
-
-export function removerSessao(): void {
-  localStorage.removeItem(CHAVE_SESSAO);
 }

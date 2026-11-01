@@ -1,11 +1,14 @@
 // src/routes/Login/index.tsx
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import ItemRecurso from './ItemRecurso';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAvisoDaRota } from '@/hooks/useAvisoDaRota';
 import { ApiError } from '@/services/api';
 import type { LoginRequest } from '@/types/auth';
+import type { EstadoRedirecionamentoLogin } from '@/types/navegacao';
+import { destinoAposLogin } from '@/utils/rotas';
 
 const recursos = [
   {
@@ -44,8 +47,12 @@ const recursos = [
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Login() {
-  const { entrar, estaAutenticado } = useAuth();
+  const { entrar, usuario } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  // Tela que a pessoa tentou abrir antes de ser mandada para o login
+  const origem = (location.state as EstadoRedirecionamentoLogin | null)?.de;
+  useAvisoDaRota();
 
   const {
     register,
@@ -58,12 +65,12 @@ export default function Login() {
     document.title = 'Entrar | Loyalty Platform';
   }, []);
 
-  // Já logado (ou acabou de entrar): leva para a Home
+  // Já logado (ou acabou de entrar): volta para a tela de origem ou para o painel do perfil
   useEffect(() => {
-    if (estaAutenticado) {
-      navigate('/', { replace: true });
+    if (usuario) {
+      navigate(destinoAposLogin(usuario, origem), { replace: true });
     }
-  }, [estaAutenticado, navigate]);
+  }, [usuario, origem, navigate]);
 
   async function onSubmit(dados: LoginRequest) {
     try {

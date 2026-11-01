@@ -3,13 +3,23 @@
 // A mesma tela de login atende a empresa cliente e o administrador da Loyalty
 export type PerfilUsuario = 'EMPRESA' | 'ADMIN';
 
-export interface Usuario {
+// Empresa de contexto de quem entra pelo painel da empresa cliente
+export interface EmpresaDoUsuario {
+  id: number;
+  nomeFantasia: string;
+}
+
+interface UsuarioBase {
   id: number;
   nome: string;
   email: string;
-  perfil: PerfilUsuario;
-  empresa?: string;
 }
+
+// Union discriminada pelo perfil: só o perfil EMPRESA carrega a empresa de contexto,
+// e o TypeScript obriga a checar o perfil antes de acessar usuario.empresa
+export type Usuario =
+  | (UsuarioBase & { perfil: 'ADMIN' })
+  | (UsuarioBase & { perfil: 'EMPRESA'; empresa: EmpresaDoUsuario });
 
 // Corpo enviado para POST /auth/login
 export interface LoginRequest {
