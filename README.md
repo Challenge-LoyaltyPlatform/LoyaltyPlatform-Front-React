@@ -15,6 +15,7 @@
 [Tecnologias](#-tecnologias-utilizadas) •
 [Estrutura](#-estrutura-de-pastas) •
 [Como executar](#%EF%B8%8F-como-executar-localmente) •
+[Autenticação](#-autenticação) •
 [Identidade visual](#%EF%B8%8F-identidade-visual) •
 [Autores](#-autores-e-créditos)
 
@@ -37,6 +38,7 @@ Este repositório contém o **front-end** da aplicação, desenvolvido em React 
 - 🏆 **Rankings** — classificação dos usuários mais engajados
 - 🔥 **Streaks** — acompanhamento de sequências de acesso/uso
 - 🐾 **SoulUpinho** — mascote que muda de humor conforme o nível de engajamento do usuário
+- 🔐 **Login da empresa cliente** — acesso ao painel integrado à API Java, com sessão mantida no navegador
 - 📄 **Páginas institucionais** — Home, Sobre, Solução, Integrantes, Dúvidas e Contato
 
 ---
@@ -50,6 +52,8 @@ Este repositório contém o **front-end** da aplicação, desenvolvido em React 
 | [Vite](https://vitejs.dev/) | Build tool e servidor de desenvolvimento |
 | [React Router](https://reactrouter.com/) | Roteamento entre páginas |
 | [Tailwind CSS v4](https://tailwindcss.com/) | Estilização utilitária |
+| [React Hook Form](https://react-hook-form.com/) | Formulários e validação |
+| [Fetch API](https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API) | Requisições HTTP nativas para a API Java |
 | [Fontsource Sora](https://fontsource.org/fonts/sora) | Fonte tipográfica do projeto |
 | [oxlint](https://oxc.rs/docs/guide/usage/linter.html) | Linter do código |
 
@@ -60,13 +64,18 @@ Este repositório contém o **front-end** da aplicação, desenvolvido em React 
 ```
 Loyalty-Platform/
 ├── src/
-│   ├── components/   # Componentes globais (Cabeçalho, Rodapé)
+│   ├── components/   # Componentes globais (Cabeçalho, Rodapé, AvatarUsuario)
+│   ├── contexts/     # Contexto de autenticação (AuthContext, AuthProvider, useAuth)
 │   ├── img/          # Imagens, ícones e logos do projeto
-│   ├── routes/       # Páginas da aplicação (Home, Sobre, Solução, Integrantes, Dúvidas, Contato, Error)
+│   ├── routes/       # Páginas da aplicação (Home, Sobre, Solução, Integrantes, Dúvidas, Contato, Login, Error)
+│   ├── services/     # Comunicação com a API Java (api.ts, authService.ts)
+│   ├── types/        # Tipos e interfaces compartilhados (auth.ts)
 │   ├── App.tsx       # Layout raiz da aplicação
 │   ├── main.tsx      # Ponto de entrada e configuração das rotas
-│   └── index.css     # Estilos globais e configuração do Tailwind
+│   ├── index.css     # Estilos globais e configuração do Tailwind
+│   └── vite-env.d.ts # Tipagem das variáveis de ambiente
 ├── index.html
+├── .env.example      # Modelo das variáveis de ambiente (URL da API)
 ├── .oxlintrc.json    # Configuração do linter
 └── .gitignore
 ```
@@ -85,11 +94,16 @@ cd LoyaltyPlatform-Front-React/Loyalty-Platform
 # Instale as dependências
 npm install
 
+# Configure a URL da API Java (opcional, o padrão é http://localhost:8080)
+cp .env.example .env.local
+
 # Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
 Acesse **http://localhost:5173** no navegador.
+
+> As páginas institucionais funcionam sem o back-end. Para entrar pela página **/login**, a API Java precisa estar rodando — veja [Autenticação](#-autenticação).
 
 ### Outros comandos úteis
 
@@ -99,6 +113,40 @@ Acesse **http://localhost:5173** no navegador.
 | `npm run build` | Gera a versão de produção |
 | `npm run preview` | Visualiza a build de produção localmente |
 | `npm run lint` | Executa o linter (oxlint) sobre o código |
+
+---
+
+## 🔐 Autenticação
+
+O painel da empresa cliente é acessado pela página **/login**, disponível no botão **Entrar** do cabeçalho. O login é feito pela API REST desenvolvida em Java (disciplina de Domain Driven Design), consumida com `fetch` nativo.
+
+**Fluxo:**
+
+1. O formulário, feito com React Hook Form, valida o e-mail e a senha.
+2. `authService.login()` envia `POST /auth/login` para a API.
+3. Se o login der certo, a sessão é salva no `localStorage` e compartilhada com toda a aplicação pelo `AuthContext` (hook `useAuth()`).
+4. O cabeçalho passa a exibir o usuário logado e a opção **Sair**.
+
+### URL da API
+
+A URL base é lida da variável de ambiente `VITE_API_URL` (padrão: `http://localhost:8080`). Localmente, defina-a no arquivo `.env.local` (criado a partir do `.env.example`). Na Vercel, cadastre `VITE_API_URL` em **Settings → Environment Variables** com a URL da API publicada.
+
+### Contrato esperado do back-end
+
+`POST /auth/login`
+
+```json
+{ "email": "nome@empresa.com.br", "senha": "********" }
+```
+
+| Status | Quando | Corpo da resposta |
+|---|---|---|
+| `200 OK` | Credenciais válidas | `{ "token": "...", "usuario": { "id": 1, "nome": "...", "email": "...", "perfil": "EMPRESA", "empresa": "..." } }` |
+| `401 Unauthorized` | E-mail ou senha incorretos | — |
+
+- `perfil` aceita `EMPRESA` ou `ADMIN`; `empresa` é opcional.
+- Em outros erros, se o corpo tiver o campo `mensagem` (ou `message`), o texto é exibido para o usuário.
+- A API precisa liberar **CORS** para a origem do front-end (`http://localhost:5173` e o domínio da Vercel).
 
 ---
 
