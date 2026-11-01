@@ -1,11 +1,26 @@
+// src/routes/EmpresasClientes/index.tsx
+// Listagem de empresas clientes (GET /empresas) com busca, filtro e inativar/reativar (PATCH)
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router';
 import CabecalhoAdmin from '@/components/CabecalhoAdmin';
-import { listarEmpresas } from '@/services/empresaService';
-import type { Empresa } from '@/types/empresa';
+import ModalStatusEmpresa from '@/components/empresa/ModalStatusEmpresa';
+import { Carregando, MensagemErro } from '@/components/Feedback';
+import { useAviso } from '@/contexts/AvisoContext';
+import { useRequisicao } from '@/hooks/useRequisicao';
+import { alterarStatusEmpresa, listarEmpresas } from '@/services/empresaService';
+import type { Empresa, StatusEmpresa } from '@/types/empresa';
+import { normalizarCnpj } from '@/utils/cnpj';
+import { rotas } from '@/utils/rotas';
+import CardEmpresa from './CardEmpresa';
 import LinhaEmpresa from './LinhaEmpresa';
-import ModalConfirmacao from './ModalConfirmacao';
 
-type Filtro = 'todas' | 'ativa' | 'inativa';
+type Filtro = 'TODAS' | StatusEmpresa;
+
+const filtros: { valor: Filtro; rotulo: string }[] = [
+  { valor: 'TODAS', rotulo: 'Todas' },
+  { valor: 'ATIVA', rotulo: 'Ativas' },
+  { valor: 'INATIVA', rotulo: 'Inativas' },
+];
 
 const colunas = ['Empresa', 'CNPJ', 'Status', 'Campanhas ativas', 'Usuários vinculados', 'Ações'];
 
@@ -13,82 +28,73 @@ const colunas = ['Empresa', 'CNPJ', 'Status', 'Campanhas ativas', 'Usuários vin
 function normalizar(texto: string) {
   return texto
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .trim();
 }
 
-function somenteDigitos(texto: string) {
-  return texto.replace(/\D/g, '');
-}
-
 export default function EmpresasClientes() {
-  const [empresas, setEmpresas] = useState<Empresa[]>([]);
-  const [carregando, setCarregando] = useState(true);
+  const { estado, recarregar, substituirDados } = useRequisicao(listarEmpresas);
+  const { avisar } = useAviso();
   const [busca, setBusca] = useState('');
-  const [filtro, setFiltro] = useState<Filtro>('todas');
+  const [filtro, setFiltro] = useState<Filtro>('TODAS');
   const [empresaEmConfirmacao, setEmpresaEmConfirmacao] = useState<Empresa | null>(null);
 
   useEffect(() => {
     document.title = 'Empresas clientes | Loyalty Platform';
   }, []);
 
-  useEffect(() => {
-    listarEmpresas()
-      .then(setEmpresas)
-      .finally(() => setCarregando(false));
-  }, []);
+  const empresas = useMemo(() => (estado.status === 'sucesso' ? estado.dados : []), [estado]);
 
-  const contadores = useMemo(
+  const contadores = useMemo<Record<Filtro, number>>(
     () => ({
-      todas: empresas.length,
-      ativa: empresas.filter((e) => e.status === 'ativa').length,
-      inativa: empresas.filter((e) => e.status === 'inativa').length,
+      TODAS: empresas.length,
+      ATIVA: empresas.filter((e) => e.status === 'ATIVA').length,
+      INATIVA: empresas.filter((e) => e.status === 'INATIVA').length,
     }),
     [empresas],
   );
 
   const empresasFiltradas = useMemo(() => {
     const termo = normalizar(busca);
-    const digitos = somenteDigitos(busca);
+    const termoCnpj = normalizarCnpj(busca);
 
     return empresas.filter((empresa) => {
-      if (filtro !== 'todas' && empresa.status !== filtro) return false;
+      if (filtro !== 'TODAS' && empresa.status !== filtro) return false;
       if (!termo) return true;
 
-      const nomeConfere = normalizar(empresa.nome).includes(termo);
-      const cnpjConfere = digitos !== '' && somenteDigitos(empresa.cnpj).includes(digitos);
+      const nomeConfere =
+        normalizar(empresa.nomeFantasia).includes(termo) || normalizar(empresa.razaoSocial).includes(termo);
+      const cnpjConfere = termoCnpj.length >= 2 && empresa.cnpj.includes(termoCnpj);
       return nomeConfere || cnpjConfere;
     });
   }, [empresas, busca, filtro]);
 
   const cancelarConfirmacao = useCallback(() => setEmpresaEmConfirmacao(null), []);
 
-  function confirmarAlteracaoStatus() {
+  // Se a API recusar, o erro sobe para o modal, que mostra a mensagem e continua aberto
+  async function confirmarAlteracaoStatus() {
     if (!empresaEmConfirmacao) return;
 
-    const inativando = empresaEmConfirmacao.status === 'ativa';
+    const novoStatus: StatusEmpresa = empresaEmConfirmacao.status === 'ATIVA' ? 'INATIVA' : 'ATIVA';
+    const atualizada = await alterarStatusEmpresa(empresaEmConfirmacao.id, novoStatus);
 
-    setEmpresas((atuais) =>
-      atuais.map((empresa) =>
-        empresa.id === empresaEmConfirmacao.id
-          ? {
-              ...empresa,
-              status: inativando ? 'inativa' : 'ativa',
-              // Inativar encerra as campanhas; reativar não traz elas de volta
-              campanhasAtivas: inativando ? 0 : empresa.campanhasAtivas,
-            }
-          : empresa,
-      ),
-    );
+    substituirDados(empresas.map((empresa) => (empresa.id === atualizada.id ? atualizada : empresa)));
     setEmpresaEmConfirmacao(null);
+    avisar({
+      tipo: 'sucesso',
+      titulo: `${atualizada.nomeFantasia} foi ${novoStatus === 'INATIVA' ? 'inativada' : 'reativada'}`,
+      descricao:
+        novoStatus === 'INATIVA'
+          ? 'O acesso foi bloqueado e as campanhas ativas foram encerradas.'
+          : 'O acesso à plataforma foi restaurado.',
+    });
   }
 
-  const filtros: { valor: Filtro; rotulo: string }[] = [
-    { valor: 'todas', rotulo: 'Todas' },
-    { valor: 'ativa', rotulo: 'Ativas' },
-    { valor: 'inativa', rotulo: 'Inativas' },
-  ];
+  function limparFiltros() {
+    setBusca('');
+    setFiltro('TODAS');
+  }
 
   const pilulaClasses = (ativo: boolean) =>
     `rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
@@ -97,9 +103,92 @@ export default function EmpresasClientes() {
         : 'border-gray-200 bg-white text-gray-600 hover:border-[#5F37F5]/40'
     }`;
 
+  function renderizarConteudo() {
+    if (estado.status === 'carregando') {
+      return <Carregando texto="Carregando empresas..." />;
+    }
+
+    if (estado.status === 'erro') {
+      return (
+        <MensagemErro
+          titulo="Não foi possível carregar as empresas"
+          mensagem={estado.erro.message}
+          aoTentarNovamente={recarregar}
+        />
+      );
+    }
+
+    if (empresas.length === 0) {
+      return (
+        <div className="px-4 py-12 text-center">
+          <p className="text-sm font-semibold text-[#12122A]">Nenhuma empresa cadastrada ainda</p>
+          <p className="mt-1 text-sm text-gray-500">Cadastre a primeira empresa cliente para começar.</p>
+          <Link
+            to={rotas.adminNovaEmpresa}
+            className="mt-4 inline-block rounded-lg bg-[#5F37F5] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#4E28E0]"
+          >
+            Cadastrar empresa
+          </Link>
+        </div>
+      );
+    }
+
+    if (empresasFiltradas.length === 0) {
+      return (
+        <div className="px-4 py-12 text-center">
+          <p className="text-sm font-semibold text-[#12122A]">Nenhuma empresa encontrada</p>
+          <p className="mt-1 text-sm text-gray-500">Nenhuma empresa confere com a busca e o filtro escolhidos.</p>
+          <button
+            type="button"
+            onClick={limparFiltros}
+            className="mt-4 text-sm font-semibold text-[#5F37F5] hover:text-[#4E28E0]"
+          >
+            Limpar busca e filtros
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        {/* Celular e tablet: cartões */}
+        <ul className="divide-y divide-gray-100 lg:hidden">
+          {empresasFiltradas.map((empresa) => (
+            <CardEmpresa key={empresa.id} empresa={empresa} aoAlterarStatus={setEmpresaEmConfirmacao} />
+          ))}
+        </ul>
+
+        {/* Desktop: tabela */}
+        <div className="hidden overflow-x-auto lg:block">
+          <table className="w-full text-left">
+            <caption className="sr-only">Empresas clientes da Loyalty Platform</caption>
+            <thead>
+              <tr>
+                {colunas.map((coluna) => (
+                  <th
+                    key={coluna}
+                    scope="col"
+                    className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-gray-500"
+                  >
+                    {coluna}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {empresasFiltradas.map((empresa) => (
+                <LinhaEmpresa key={empresa.id} empresa={empresa} aoAlterarStatus={setEmpresaEmConfirmacao} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      <CabecalhoAdmin secao="Administração" titulo="Empresas clientes" />
+      <CabecalhoAdmin trilha={[{ rotulo: 'Administração' }, { rotulo: 'Empresas clientes' }]} titulo="Empresas clientes" />
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <div className="relative w-full sm:w-72">
@@ -125,7 +214,7 @@ export default function EmpresasClientes() {
             id="busca-empresa"
             type="search"
             value={busca}
-            onChange={(e) => setBusca(e.target.value)}
+            onChange={(evento) => setBusca(evento.target.value)}
             placeholder="Buscar por nome ou CNPJ"
             className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-9 pr-3 text-sm text-[#12122A] placeholder-gray-400 outline-none transition focus:border-[#5F37F5] focus:ring-2 focus:ring-[#5F37F5]/20"
           />
@@ -140,61 +229,22 @@ export default function EmpresasClientes() {
               aria-pressed={filtro === valor}
               className={pilulaClasses(filtro === valor)}
             >
-              {rotulo} ({contadores[valor]})
+              {rotulo}
+              {estado.status === 'sucesso' && ` (${contadores[valor]})`}
             </button>
           ))}
         </div>
 
-        <button
-          type="button"
-          className="w-full sm:w-auto sm:ml-auto rounded-lg bg-[#5F37F5] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#4E28E0]"
+        <Link
+          to={rotas.adminNovaEmpresa}
+          className="w-full rounded-lg bg-[#5F37F5] px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#4E28E0] sm:ml-auto sm:w-auto"
         >
           Cadastrar empresa
-        </button>
+        </Link>
       </div>
 
-      <section className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr>
-                {colunas.map((coluna) => (
-                  <th
-                    key={coluna}
-                    className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-gray-500 whitespace-nowrap"
-                  >
-                    {coluna}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {carregando ? (
-                <tr>
-                  <td colSpan={colunas.length} className="px-4 py-8 text-center text-sm text-gray-500">
-                    Carregando empresas...
-                  </td>
-                </tr>
-              ) : empresasFiltradas.length === 0 ? (
-                <tr>
-                  <td colSpan={colunas.length} className="px-4 py-8 text-center text-sm text-gray-500">
-                    {empresas.length === 0
-                      ? 'Nenhuma empresa cadastrada ainda.'
-                      : 'Nenhuma empresa encontrada com esses critérios.'}
-                  </td>
-                </tr>
-              ) : (
-                empresasFiltradas.map((empresa) => (
-                  <LinhaEmpresa
-                    key={empresa.id}
-                    empresa={empresa}
-                    onAlterarStatus={setEmpresaEmConfirmacao}
-                  />
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      <section aria-label="Lista de empresas" className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
+        {renderizarConteudo()}
       </section>
 
       <p className="mt-4 flex items-start gap-2 rounded-lg bg-[#F0EEFB] px-4 py-3 text-xs text-[#4E28E0]">
@@ -219,10 +269,10 @@ export default function EmpresasClientes() {
       </p>
 
       {empresaEmConfirmacao && (
-        <ModalConfirmacao
+        <ModalStatusEmpresa
           empresa={empresaEmConfirmacao}
-          onConfirmar={confirmarAlteracaoStatus}
-          onCancelar={cancelarConfirmacao}
+          aoConfirmar={confirmarAlteracaoStatus}
+          aoCancelar={cancelarConfirmacao}
         />
       )}
     </>
