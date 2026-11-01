@@ -1,12 +1,13 @@
 type CardIntegranteProps = {
     nome: string;
     rm: string;
+    turma: string;
     foto: string;
     linkedin: string;
     github: string;
 };
 
-export default function CardIntegrante({ nome, rm, foto, linkedin, github }: CardIntegranteProps) {
+export default function CardIntegrante({ nome, rm, turma, foto, linkedin, github }: CardIntegranteProps) {
     return (
     <article className="bg-[#12122A] rounded-2xl overflow-hidden">
       <img
@@ -16,7 +17,7 @@ export default function CardIntegrante({ nome, rm, foto, linkedin, github }: Car
       />
       <div className="p-5 text-center">
         <h2 className="text-white font-bold text-lg">{nome}</h2>
-        <p className="text-gray-400 text-sm mt-1">RM {rm}</p>
+        <p className="text-gray-400 text-sm mt-1">RM {rm} · Turma {turma}</p>
       <div className="flex items-center justify-center gap-4 mt-3">
           <a
             href={linkedin}
