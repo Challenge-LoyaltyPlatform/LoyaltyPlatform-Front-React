@@ -6,17 +6,19 @@
 **Gamificação e engajamento B2B, transformando interação digital em recompensas reais.**
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/license-acadêmico-lightgrey)](#-licença)
 
 [Sobre](#-sobre-o-projeto) •
+[Como usar](#-como-usar) •
 [Tecnologias](#-tecnologias-utilizadas) •
 [Estrutura](#-estrutura-de-pastas) •
 [Como executar](#%EF%B8%8F-como-executar-localmente) •
-[Identidade visual](#%EF%B8%8F-identidade-visual) •
-[Autores](#-autores-e-créditos)
+[Integração com a API](#-integração-com-a-api-java) •
+[Autores](#-autores-e-créditos) •
+[Contato](#-contato)
 
 </div>
 
@@ -26,14 +28,15 @@
 
 **Loyalty Platform** é uma plataforma B2B de gamificação e engajamento que ajuda empresas a reter seus usuários de forma ativa e contínua. Por meio de **missões**, **rankings**, **streaks** e um mascote virtual — o **SoulUpinho** —, o projeto transforma o engajamento digital em recompensas reais, dando às empresas parceiras uma forma visual e intuitiva de acompanhar o nível de participação de seus usuários.
 
-Este repositório contém o **front-end** da aplicação, desenvolvido em React + TypeScript.
+Este repositório contém o **front-end** da aplicação, desenvolvido em React + TypeScript, com o site institucional e o painel do administrador integrado à API Java.
 
 > Projeto acadêmico desenvolvido para o **FIAP Challenge 2026**.
 
-🔗 **Repositório:** [Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React](https://github.com/Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React)
-
 ### ✨ Funcionalidades principais
 
+- 🏢 **Painel do administrador** — lista, cadastra, edita, inativa e reativa empresas clientes consumindo a API Java
+- 🎨 **Identidade visual por empresa** — cor, tipografia e forma dos botões com prévia do app em tempo real (white label)
+- 🔐 **Login** — acesso ao painel com redirecionamento por perfil e aviso de sessão expirada
 - 🏆 **Rankings** — classificação dos usuários mais engajados
 - 🔥 **Streaks** — acompanhamento de sequências de acesso/uso
 - 🐾 **SoulUpinho** — mascote que muda de humor conforme o nível de engajamento do usuário
@@ -41,41 +44,70 @@ Este repositório contém o **front-end** da aplicação, desenvolvido em React 
 
 ---
 
+## 🔗 Como usar
+
+| Item | Link |
+|---|---|
+| Repositório no GitHub | [Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React](https://github.com/Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React) |
+| Aplicação publicada (Vercel) | _a preencher após o deploy_ |
+| API Java publicada | _a preencher após o deploy da API_ |
+| Vídeo de apresentação (YouTube) | _a preencher após a gravação_ |
+
+**Acesso ao painel:** clique em **Entrar** no cabeçalho e use as credenciais de administrador cadastradas no banco. Depois do login, o painel abre em `/admin/empresas`.
+
+---
+
 ## 🚀 Tecnologias utilizadas
 
 | Tecnologia | Finalidade |
 |---|---|
-| [React](https://react.dev/) | Biblioteca para construção da interface |
-| [TypeScript](https://www.typescriptlang.org/) | Tipagem estática |
-| [Vite](https://vitejs.dev/) | Build tool e servidor de desenvolvimento |
-| [React Router](https://reactrouter.com/) | Roteamento entre páginas |
-| [Tailwind CSS v4](https://tailwindcss.com/) | Estilização utilitária |
-| [Fontsource Sora](https://fontsource.org/fonts/sora) | Fonte tipográfica do projeto |
+| [React 19](https://react.dev/) | Biblioteca para construção da interface |
+| [TypeScript 6](https://www.typescriptlang.org/) | Tipagem estática, inclusive das respostas da API |
+| [Vite 8](https://vitejs.dev/) | Build tool e servidor de desenvolvimento |
+| [React Router 8](https://reactrouter.com/) | Rotas estáticas, dinâmicas (`/admin/empresas/:id`) e redirecionamentos |
+| [React Hook Form](https://react-hook-form.com/) | Formulários de login e de cadastro/edição de empresa |
+| [Tailwind CSS v4](https://tailwindcss.com/) | Estilização utilitária e responsividade |
+| Fetch API | Requisições HTTP à API Java (sem Axios) |
+| [Fontsource](https://fontsource.org/) | Fontes Sora, Inter e Poppins servidas pelo próprio projeto |
 | [oxlint](https://oxc.rs/docs/guide/usage/linter.html) | Linter do código |
+| [Vercel](https://vercel.com/) | Hospedagem do front-end |
 
 ---
 
 ## 📁 Estrutura de pastas
 
 ```
-Loyalty-Platform/
-├── src/
-│   ├── components/   # Componentes globais (Cabeçalho, Rodapé)
-│   ├── img/          # Imagens, ícones e logos do projeto
-│   ├── routes/       # Páginas da aplicação (Home, Sobre, Solução, Integrantes, Dúvidas, Contato, Error)
-│   ├── App.tsx       # Layout raiz da aplicação
-│   ├── main.tsx      # Ponto de entrada e configuração das rotas
-│   └── index.css     # Estilos globais e configuração do Tailwind
-├── index.html
-├── .oxlintrc.json    # Configuração do linter
-└── .gitignore
+LoyaltyPlatform-Front-React/
+├── docs/
+│   └── contrato-api.md        # Endpoints, JSON e erros que o front espera da API Java
+└── Loyalty-Platform/
+    ├── src/
+    │   ├── components/        # Componentes reutilizáveis
+    │   │   ├── empresa/       # Formulário, prévia do app, badge e modal de status de empresa
+    │   │   └── formulario/    # Campo com rótulo/erro e estilos de entrada
+    │   ├── contexts/          # AuthContext (login) e AvisoContext (avisos na tela) com useContext
+    │   ├── hooks/             # useRequisicao (loading/erro/sucesso), useAvisoDaRota, useEmpresaDaRota
+    │   ├── img/               # Imagens, ícones e logos
+    │   ├── routes/            # Uma pasta por página (Home, Sobre, Login, EmpresasClientes, DetalheEmpresa...)
+    │   ├── services/          # Camada de integração: api.ts (fetch), authService, empresaService, sessao
+    │   ├── types/             # Tipos e interfaces (contrato da API, autenticação, navegação)
+    │   ├── utils/             # CNPJ, formatação, contraste de cor e rotas
+    │   ├── App.tsx            # Layout do site (cabeçalho + rodapé)
+    │   ├── main.tsx           # Ponto de entrada e definição das rotas
+    │   └── index.css          # Tailwind e estilos globais
+    ├── .env.example           # Modelo da variável VITE_API_URL
+    ├── vercel.json            # Faz a Vercel servir o index.html em qualquer rota (SPA)
+    ├── index.html
+    └── package.json
 ```
+
+As páginas ficam em `src/routes/` (e não em `src/pages/`) porque cada pasta corresponde a uma rota do React Router.
 
 ---
 
 ## ▶️ Como executar localmente
 
-**Pré-requisitos:** [Node.js](https://nodejs.org/) 18+ e npm.
+**Pré-requisitos:** [Node.js](https://nodejs.org/) **22.22 ou superior** (exigido pelo React Router 8) e npm.
 
 ```bash
 # Clone o repositório
@@ -85,20 +117,51 @@ cd LoyaltyPlatform-Front-React/Loyalty-Platform
 # Instale as dependências
 npm install
 
+# Aponte para a API Java (local ou publicada)
+cp .env.example .env.local      # no Windows: copy .env.example .env.local
+
 # Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
-Acesse **http://localhost:5173** no navegador.
+Acesse **http://localhost:5173** no navegador. Sem a API no ar, o site institucional funciona normalmente e as telas do painel mostram a mensagem de erro com a opção de tentar novamente.
+
+### Desenvolver sem o back-end (API simulada)
+
+Enquanto a API Java não estiver no ar, coloque `VITE_API_MOCK=true` no `.env.local` e reinicie o `npm run dev`. As requisições passam a ser respondidas por `src/services/apiSimulada.ts`, que segue o [contrato da API](docs/contrato-api.md) e guarda os dados só na memória do navegador (voltam ao inicial ao recarregar). Um selo amarelo no canto da tela indica o modo simulado.
+
+- Login de administrador: `admin@loyalty.com` / `senha123`
+- Login de empresa cliente: `empresa@soulup.com.br` / `senha123`
+
+O modo simulado é só para desenvolvimento: **não** cadastre `VITE_API_MOCK` na Vercel. Sem a variável, o build de produção nem inclui o código da API simulada.
 
 ### Outros comandos úteis
 
 | Comando | Descrição |
 |---|---|
 | `npm run dev` | Inicia o servidor de desenvolvimento |
-| `npm run build` | Gera a versão de produção |
+| `npm run build` | Checa os tipos e gera a versão de produção |
 | `npm run preview` | Visualiza a build de produção localmente |
 | `npm run lint` | Executa o linter (oxlint) sobre o código |
+
+---
+
+## 🔌 Integração com a API Java
+
+Todas as chamadas HTTP passam por `src/services/api.ts`, que monta a URL a partir de `VITE_API_URL`, envia o token de login, aplica tempo limite de 30 s e transforma qualquer falha em um `ApiError` com mensagem em português. Cada recurso tem seu service (`empresaService.ts`, `authService.ts`), e nenhum componente chama `fetch` diretamente.
+
+| Operação | Método | Endpoint | Tela |
+|---|---|---|---|
+| Login | `POST` | `/auth/login` | Login |
+| Listar empresas | `GET` | `/empresas` | Empresas clientes |
+| Detalhar empresa | `GET` | `/empresas/{id}` | Detalhe e edição (rota dinâmica) |
+| Cadastrar empresa | `POST` | `/empresas` | Cadastrar empresa |
+| Editar empresa | `PUT` | `/empresas/{id}` | Editar empresa |
+| Inativar/reativar | `PATCH` | `/empresas/{id}/status` | Lista e detalhe |
+
+Os formatos de requisição, resposta e erro estão em [`docs/contrato-api.md`](docs/contrato-api.md).
+
+**Deploy na Vercel:** em *Root Directory* selecione `Loyalty-Platform` e cadastre `VITE_API_URL` (com HTTPS) em *Settings → Environment Variables*.
 
 ---
 
@@ -118,12 +181,20 @@ O sistema conta com identidade visual própria, incluindo o mascote **SoulUpinho
 
 ## 👥 Autores e créditos
 
-| Nome | RM | Turma | LinkedIn | GitHub |
-|---|---|---|---|---|
-| Andrei Oliveira de Sousa | 573373 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/andrei-sousa-55662825a/) | [GitHub](https://github.com/andreisou-dev) |
-| Felipe Coelho da Fonseca | 572133 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/felipe-coelho-80b78a394/) | [GitHub](https://github.com/devfcoelho) |
-| Henrique Soares Pereira | 569898 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/henrique-soares-pereira/) | [GitHub](https://github.com/Henriquesope) |
-| Luiz Felipe Lourenço da Silva | 572576 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/lfelipelourenco/) | [GitHub](https://github.com/devlipee) |
+| Foto | Nome | RM | Turma | LinkedIn | GitHub |
+|---|---|---|---|---|---|
+| <img src="Loyalty-Platform/src/img/fotoAndrei.jpg" width="60" /> | Andrei Oliveira de Sousa | 573373 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/andrei-sousa-55662825a/) | [GitHub](https://github.com/andreisou-dev) |
+| <img src="Loyalty-Platform/src/img/fotoFelipe.jpg" width="60" /> | Felipe Coelho da Fonseca | 572133 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/felipe-coelho-80b78a394/) | [GitHub](https://github.com/devfcoelho) |
+| <img src="Loyalty-Platform/src/img/fotoHenrique.jpg" width="60" /> | Henrique Soares Pereira | 569898 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/henrique-soares-pereira/) | [GitHub](https://github.com/Henriquesope) |
+| <img src="Loyalty-Platform/src/img/fotoLuiz.jpg" width="60" /> | Luiz Felipe Lourenço da Silva | 572576 | 1TDSPW | [LinkedIn](https://www.linkedin.com/in/lfelipelourenco/) | [GitHub](https://github.com/devlipee) |
+
+---
+
+## 📬 Contato
+
+- Dúvidas sobre o projeto: abra uma [issue no repositório](https://github.com/Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React/issues).
+- Contato direto com a equipe: pelos perfis de LinkedIn na tabela de autores acima.
+- Pelo próprio site: página **Contato** da aplicação publicada.
 
 ---
 
