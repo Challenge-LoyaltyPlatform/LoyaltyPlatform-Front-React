@@ -4,11 +4,11 @@ import logoPrincipal from '@/img/LOGO PRINCIPAL.png';
 
 export default function Rodape() {
   return (
-    <footer className="w-full bg-[#12122a] px-10 py-10">
+    <footer className="w-full bg-[#12122a] px-6 py-10 sm:px-10">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center gap-10">
           {/* Logo + texto institucional */}
-          <div className="flex items-center gap-5 flex-1">
+          <div className="flex flex-col items-start gap-5 flex-1 sm:flex-row sm:items-center">
             <img src={logoPrincipal} alt="Loyalty Platform" className="h-20 w-auto shrink-0" />
             <p className="text-gray-300 text-base leading-relaxed max-w-md">
               A Loyalty Platform transforma o engajamento dos seus usuários em
