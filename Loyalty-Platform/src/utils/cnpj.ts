@@ -1,7 +1,8 @@
 // src/utils/cnpj.ts
 // Desde julho de 2026 a Receita emite CNPJ alfanumérico (IN RFB 2.229/2024):
-// as 12 primeiras posições aceitam 0-9 e A-Z, e os 2 dígitos verificadores seguem numéricos.
-// Os CNPJs só numéricos continuam válidos e passam pela mesma conta.
+// as 12 primeiras posições aceitam 0-9 e A-Z, e as 2 últimas seguem numéricas.
+// Decisão do grupo: conferir só o formato, sem calcular o dígito verificador,
+// igual à validação da API Java (EmpresaRequest) e à constraint do banco.
 
 const TAMANHO = 14;
 const FORMATO = /^[0-9A-Z]{12}[0-9]{2}$/;
@@ -26,30 +27,7 @@ export function formatarCnpj(valor: string): string {
   );
 }
 
-// Cada caractere vale o código ASCII menos 48: '0'..'9' valem 0..9 e 'A'..'Z' valem 17..42
-function calcularDigito(base: string): number {
-  let peso = 2;
-  let soma = 0;
-
-  // Pesos de 2 a 9, da direita para a esquerda, voltando a 2 depois do 9
-  for (let i = base.length - 1; i >= 0; i--) {
-    soma += (base.charCodeAt(i) - 48) * peso;
-    peso = peso === 9 ? 2 : peso + 1;
-  }
-
-  const resto = soma % 11;
-  return resto < 2 ? 0 : 11 - resto;
-}
-
+// Só confere o formato: 12 letras ou números + 2 dígitos (aceita o CNPJ alfanumérico)
 export function cnpjValido(valor: string): boolean {
-  const cnpj = normalizarCnpj(valor);
-
-  if (!FORMATO.test(cnpj)) return false;
-  // 00.000.000/0000-00, 11.111.111/1111-11... passam na conta, mas não existem
-  if (/^(.)\1+$/.test(cnpj)) return false;
-
-  const primeiro = calcularDigito(cnpj.slice(0, 12));
-  const segundo = calcularDigito(cnpj.slice(0, 12) + primeiro);
-
-  return cnpj.endsWith(`${primeiro}${segundo}`);
+  return FORMATO.test(normalizarCnpj(valor));
 }
