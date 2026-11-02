@@ -90,7 +90,7 @@ export default function Home() {
 
         <div className="mt-10 flex justify-center">
         <a href="/sobre"
-          className="inline-block bg-[#6C4DFC] hover:bg-[#5b3ce6] transition text-white text-base font-bold px-10 py-4 rounded-full"
+          className="home-cta inline-block bg-[#6C4DFC] hover:bg-[#5b3ce6] text-white text-base font-bold px-10 py-4 rounded-full"
   >
           Conheça a solução!
         </a>
