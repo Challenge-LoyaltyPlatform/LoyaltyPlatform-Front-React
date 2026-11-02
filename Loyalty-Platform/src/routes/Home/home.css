@@ -21,11 +21,26 @@
       border-color 250ms ease, opacity 250ms ease;
   }
 
+  .home .home-cards li,
+  .home .home-cards li::before {
+    transition: transform 200ms ease, background-color 200ms ease;
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .home .home-cards > div:hover {
       transform: translateY(-6px);
       border-color: #a695ff;
       box-shadow: 0 14px 32px -16px rgb(108 77 252 / 60%);
+    }
+
+    .home .home-cards li:hover {
+      transform: translateX(4px);
+      background-color: rgb(127 119 221 / 20%);
+    }
+
+    .home .home-cards li:hover::before {
+      transform: scale(1.4);
+      background-color: #fc3e8e;
     }
   }
 }
