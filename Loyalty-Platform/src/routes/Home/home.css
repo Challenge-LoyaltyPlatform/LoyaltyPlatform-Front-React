@@ -1,0 +1,93 @@
+/* Keep motion local to the home and opt in only when the user allows it. */
+.home .home-cta:focus-visible {
+  outline: 3px solid #fc952e;
+  outline-offset: 5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home .home-intro,
+  .home .home-about,
+  .home .home-cards > div {
+    animation: home-enter 650ms ease-out backwards;
+  }
+
+  .home .home-about { animation-delay: 100ms; }
+  .home .home-cards > div:nth-child(1) { animation-delay: 180ms; }
+  .home .home-cards > div:nth-child(2) { animation-delay: 260ms; }
+  .home .home-cards > div:nth-child(3) { animation-delay: 340ms; }
+
+  .home .home-gradient {
+    background-size: 200% 100%;
+    animation: home-gradient 8s ease-in-out 2;
+  }
+
+  .home .home-cards > div {
+    transition: transform 250ms ease, box-shadow 250ms ease,
+      border-color 250ms ease, opacity 250ms ease;
+  }
+
+  .home .home-cards li,
+  .home .home-cards li::before {
+    transition: transform 200ms ease, background-color 200ms ease;
+  }
+
+  .home .home-cta {
+    transition: transform 200ms ease, box-shadow 200ms ease,
+      background-color 200ms ease;
+  }
+
+  .home .home-cta:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgb(108 77 252 / 35%);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .home .home-cards > div:hover {
+      transform: translateY(-6px);
+      border-color: #a695ff;
+      box-shadow: 0 14px 32px -16px rgb(108 77 252 / 60%);
+    }
+
+    .home .home-cards li:hover {
+      transform: translateX(4px);
+      background-color: rgb(127 119 221 / 20%);
+    }
+
+    .home .home-cards li:hover::before {
+      transform: scale(1.4);
+      background-color: #fc3e8e;
+    }
+
+    .home .home-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgb(108 77 252 / 35%);
+    }
+  }
+
+  .home .home-cta:active {
+    transform: scale(0.97);
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home .home-cards > div {
+    transition: none;
+  }
+}
+
+@keyframes home-gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes home-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
