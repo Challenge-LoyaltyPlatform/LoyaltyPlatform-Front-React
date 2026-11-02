@@ -1,0 +1,24 @@
+/* Keep motion local to the home and opt in only when the user allows it. */
+@media (prefers-reduced-motion: no-preference) {
+  .home .home-intro,
+  .home .home-about,
+  .home .home-cards > div {
+    animation: home-enter 650ms ease-out backwards;
+  }
+
+  .home .home-about { animation-delay: 100ms; }
+  .home .home-cards > div:nth-child(1) { animation-delay: 180ms; }
+  .home .home-cards > div:nth-child(2) { animation-delay: 260ms; }
+  .home .home-cards > div:nth-child(3) { animation-delay: 340ms; }
+}
+
+@keyframes home-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

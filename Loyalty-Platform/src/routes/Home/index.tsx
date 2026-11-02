@@ -1,5 +1,6 @@
 import logoPrincipal from "../../img/LOGO PRINCIPAL.png";
 import { useEffect } from 'react';
+import './home.css';
 
 
 export default function Home() {
@@ -7,9 +8,9 @@ export default function Home() {
       document.title = 'Home | Loyalty Platform';
     }, []);
   return (
-    <main className="min-h-screen bg-[#08081A] text-[#E9EAF1] font-['Sora'] px-6 py-10 md:px-16">
+    <main className="home min-h-screen bg-[#08081A] text-[#E9EAF1] font-['Sora'] px-6 py-10 md:px-16">
       {/* HEADER */}
-     <header className="flex flex-col md:flex-row md:items-center justify-center gap-6 md:gap-16 border-b border-white/10 pb-10">
+     <header className="home-intro flex flex-col md:flex-row md:items-center justify-center gap-6 md:gap-16 border-b border-white/10 pb-10">
         <img
           src={logoPrincipal}
           alt="logo principal"
@@ -27,7 +28,7 @@ export default function Home() {
       </header>
 
       {/* QUEM SOMOS */}
-      <section className="max-w-2xl mx-auto text-center mt-14 px-4">
+      <section className="home-about max-w-2xl mx-auto text-center mt-14 px-4">
         <h1 className="text-2xl md:text-3xl font-bold mb-4">Quem somos?</h1>
 
         <p className="text-sm md:text-base text-[#C5C6D6] leading-relaxed">
@@ -42,7 +43,7 @@ export default function Home() {
       </section>
 
       {/* CARDS */}
-      <section className="flex flex-wrap items-stretch justify-center gap-6 w-full py-10">
+      <section className="home-cards flex flex-wrap items-stretch justify-center gap-6 w-full py-10">
         <div className="group bg-[#14152B] text-white border-[0.5px] border-white rounded-[10px] w-[280px] min-h-[320px] p-8 box-border flex flex-col items-center gap-4 opacity-85 hover:opacity-100 transition-opacity duration-300">
           <h2 className="text-white font-bold text-lg mb-3 pb-3 border-b-[0.5px] border-[#5F37F5] w-full text-center">
             Missão
