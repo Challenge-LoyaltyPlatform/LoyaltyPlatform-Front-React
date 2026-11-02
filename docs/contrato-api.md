@@ -208,7 +208,7 @@ O front sempre usa o objeto devolvido pelo `PUT`/`PATCH` para atualizar a tela, 
 
 ## 5. Publicação
 
-- URL da API publicada (Render): _a preencher após o deploy_.
+- URL da API publicada (Render): https://loyalty-platform-api-snkp.onrender.com. Front publicado (Vercel): https://loyalty-platform-front-react.vercel.app.
 - A API precisa estar no ar com **HTTPS** e a URL precisa ir para o README do front (rubrica: 5 pontos).
 - Na Vercel, cadastrar `VITE_API_URL` em *Settings → Environment Variables* e refazer o deploy (variáveis `VITE_` entram no build, não em tempo de execução).
 - Hospedagem gratuita costuma "dormir": a primeira chamada pode levar dezenas de segundos. O front espera até 30 s antes de mostrar erro.

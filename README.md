@@ -50,8 +50,8 @@ Este repositório contém o **front-end** da aplicação, desenvolvido em React 
 |---|---|
 | Repositório no GitHub | [Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React](https://github.com/Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React) |
 | Repositório da API Java | [Challenge-LoyaltyPlatform/Java-LoyaltyPlatform4](https://github.com/Challenge-LoyaltyPlatform/Java-LoyaltyPlatform4) |
-| Aplicação publicada (Vercel) | _a preencher após o deploy_ |
-| API Java publicada (Render) | _a preencher após o deploy da API_ |
+| Aplicação publicada (Vercel) | [loyalty-platform-front-react.vercel.app](https://loyalty-platform-front-react.vercel.app) |
+| API Java publicada (Render) | [loyalty-platform-api-snkp.onrender.com](https://loyalty-platform-api-snkp.onrender.com) |
 | Vídeo de apresentação (YouTube) | _a preencher após a gravação_ |
 
 **Acesso ao painel:** clique em **Entrar** no cabeçalho e use a conta de administrador `admin@loyalty.com` (criada pelo script `database/03_alteracoes_api_java.sql` do repositório Java; a senha está no comentário do script). Depois do login, o painel abre em `/admin/empresas`. Na primeira chamada depois de um tempo parada, a API pode levar cerca de 1 minuto para acordar.
