@@ -21,7 +21,7 @@ export default function Home() {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#E9EAF1]">
             Gamificação que engaja.
           </h1>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold bg-gradient-to-r from-[#5F37F5] via-[#FC3E8E] to-[#FC952E] bg-clip-text text-transparent">
+          <h2 className="home-gradient text-xl sm:text-2xl md:text-3xl font-semibold bg-gradient-to-r from-[#5F37F5] via-[#FC3E8E] to-[#FC952E] bg-clip-text text-transparent">
             Resultados que fidelizam.
           </h2>
         </div>
