@@ -15,6 +15,25 @@
     background-size: 200% 100%;
     animation: home-gradient 8s ease-in-out 2;
   }
+
+  .home .home-cards > div {
+    transition: transform 250ms ease, box-shadow 250ms ease,
+      border-color 250ms ease, opacity 250ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .home .home-cards > div:hover {
+      transform: translateY(-6px);
+      border-color: #a695ff;
+      box-shadow: 0 14px 32px -16px rgb(108 77 252 / 60%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home .home-cards > div {
+    transition: none;
+  }
 }
 
 @keyframes home-gradient {
