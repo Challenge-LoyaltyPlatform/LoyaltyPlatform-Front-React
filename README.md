@@ -198,6 +198,12 @@ O sistema conta com identidade visual própria, incluindo o mascote **SoulUpinho
 
 ---
 
+## ▶️Link do vídeo
+https://www.youtube.com/watch?v=N8k1PN_uGOA
+
+
+---
+
 ## 📬 Contato
 
 - Dúvidas sobre o projeto: abra uma [issue no repositório](https://github.com/Challenge-LoyaltyPlatform/LoyaltyPlatform-Front-React/issues).
